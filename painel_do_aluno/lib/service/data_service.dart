@@ -1,5 +1,7 @@
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
+import 'package:painel_do_aluno/models/matricula_disciplina.dart';
+import 'package:painel_do_aluno/models/aluno.dart';
 
 class DataService {
   // Método que retorna a lista de cursos
@@ -17,6 +19,71 @@ class DataService {
       Disciplina(
         id: '1',
         nome: 'Algoritmos',
+        cargaHoraria: 60,
+        cursoId: '1',
+        periodo: '1',
+      ),
+      Disciplina(
+        id: '2',
+        nome: 'Matemática Discreta',
+        cargaHoraria: 60,
+        cursoId: '1',
+        periodo: '1',
+      ),
+      Disciplina(
+        id: '3',
+        nome: 'Engenharia de Software',
+        cargaHoraria: 60,
+        cursoId: '1',
+        periodo: '2',
+      ),
+      Disciplina(
+        id: '4',
+        nome: 'Banco de Dados',
+        cargaHoraria: 60,
+        cursoId: '1',
+        periodo: '2',
+      ),
+
+      // Disciplinas de Administração (ID = 2)
+      Disciplina(
+        id: '5',
+        nome: 'Introdução à Administração',
+        cargaHoraria: 60,
+        cursoId: '2',
+        periodo: '1',
+      ),
+      Disciplina(
+        id: '6',
+        nome: 'Contabilidade Básica',
+        cargaHoraria: 60,
+        cursoId: '2',
+        periodo: '1',
+      ),
+      Disciplina(
+        id: '7',
+        nome: 'Gestão de Pessoas',
+        cargaHoraria: 60,
+        cursoId: '2',
+        periodo: '2',
+      ),
+      Disciplina(
+        id: '8',
+        nome: 'Marketing',
+        cargaHoraria: 60,
+        cursoId: '2',
+        periodo: '2',
+      ),
+    ];
+  }
+
+  // Método que retorna a lista de matrícula de disciplinas (matriculas dos alunos nas disciplinas)
+    List<MatriculaDisciplina> carregarMatriculas() {
+    return [
+      MatriculaDisciplina(
+        id: '1',
+        disciplinaId: '1',
+        alunoId: '1',
         faltas: 3,
         a1: 8.0,
         a2: 7.5,
@@ -24,12 +91,12 @@ class DataService {
         mediaSemestral: 7.75,
         mediaFinal: 7.75,
         situacao: 'APROVADO',
-        cargaHoraria: 60,
-        cursoId: '1',
+        semestreAtual: true,  // Indica que esta matrícula é do semestre atual
       ),
-      Disciplina(
+      MatriculaDisciplina(
         id: '2',
-        nome: 'Matemática Discreta',
+        disciplinaId: '2',
+        alunoId: '1',
         faltas: 5,
         a1: 5.0,
         a2: 4.5,
@@ -37,40 +104,12 @@ class DataService {
         mediaSemestral: 4.75,
         mediaFinal: 6.0,
         situacao: 'APROVADO',
-        cargaHoraria: 60,
-        cursoId: '1',
+        semestreAtual: true,  // Indica que esta matrícula é do semestre atual
       ),
-      Disciplina(
+      MatriculaDisciplina(
         id: '3',
-        nome: 'Engenharia de Software',
-        faltas: 7,
-        a1: 3.0,
-        a2: 2.5,
-        exameFinal: null,
-        mediaSemestral: 2.75,
-        mediaFinal: 2.75,
-        situacao: 'REPROVADO',
-        cargaHoraria: 60,
-        cursoId: '1',
-      ),
-      Disciplina(
-        id: '4',
-        nome: 'Banco de Dados',
-        faltas: 2,
-        a1: 7.0,
-        a2: 0.0,
-        exameFinal: null,
-        mediaSemestral: 3.5,
-        mediaFinal: 3.5,
-        situacao: 'MATRICULADO',
-        cargaHoraria: 60,
-        cursoId: '1',
-      ),
-
-      // Disciplinas de Administração (ID = 2)
-      Disciplina(
-        id: '5',
-        nome: 'Introdução à Administração',
+        disciplinaId: '5',
+        alunoId: '2',
         faltas: 2,
         a1: 7.0,
         a2: 8.0,
@@ -78,12 +117,12 @@ class DataService {
         mediaSemestral: 7.5,
         mediaFinal: 7.5,
         situacao: 'APROVADO',
-        cargaHoraria: 60,
-        cursoId: '2',
+        semestreAtual: true,  // Indica que esta matrícula é do semestre atual
       ),
-      Disciplina(
-        id: '6',
-        nome: 'Contabilidade Básica',
+      MatriculaDisciplina(
+        id: '4',
+        disciplinaId: '6',
+        alunoId: '2',
         faltas: 3,
         a1: 6.0,
         a2: 7.0,
@@ -91,35 +130,27 @@ class DataService {
         mediaSemestral: 6.5,
         mediaFinal: 6.5,
         situacao: 'APROVADO',
-        cargaHoraria: 60,
-        cursoId: '2',
-      ),
-      Disciplina(
-        id: '7',
-        nome: 'Gestão de Pessoas',
-        faltas: 1,
-        a1: 8.0,
-        a2: 8.5,
-        exameFinal: null,
-        mediaSemestral: 8.25,
-        mediaFinal: 8.25,
-        situacao: 'APROVADO',
-        cargaHoraria: 60,
-        cursoId: '2',
-      ),
-      Disciplina(
-        id: '8',
-        nome: 'Marketing',
-        faltas: 4,
-        a1: 5.5,
-        a2: 6.0,
-        exameFinal: 7.0,
-        mediaSemestral: 5.75,
-        mediaFinal: 6.5,
-        situacao: 'MATRICULADO',
-        cargaHoraria: 60,
-        cursoId: '2',
+        semestreAtual: false, // Esta matrícula não é do semestre atual
       ),
     ];
+  }
+
+
+  // Método que retorna um aluno fictício
+  Aluno carregarAluno() {
+    return Aluno(
+      id: '1',
+      nome: 'João Silva',
+      email: 'joao.silva@email.com',
+      cpf: '12345678901',
+      senha: 'senha123',
+      status: 'Ativo',
+      numeroMatricula: '12345',
+      simIdentidade: true,
+      simCertNascimento: true,
+      simHistoricoEscolar: true,
+      simDiploma: false,
+      simCompVacina: true,
+    );
   }
 }

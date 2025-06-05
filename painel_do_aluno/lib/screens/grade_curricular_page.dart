@@ -23,41 +23,52 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
     disciplinas = dataService.carregarDisciplinas();
   }
 
+  // Função para agrupar disciplinas por período, filtrando pelo curso selecionado
+  Map<String, List<Disciplina>> _agruparDisciplinasPorPeriodo() {
+    Map<String, List<Disciplina>> agrupamento = {};
+
+    // Filtra as disciplinas para o curso selecionado
+    var disciplinasFiltradas = cursoSelecionado == null
+        ? []
+        : disciplinas.where((disciplina) => disciplina.cursoId == cursoSelecionado).toList();
+
+    for (var disciplina in disciplinasFiltradas) {
+      // Se o período já existe, adiciona a disciplina, senão cria a lista
+      if (agrupamento.containsKey(disciplina.periodo)) {
+        agrupamento[disciplina.periodo]?.add(disciplina);
+      } else {
+        agrupamento[disciplina.periodo] = [disciplina];
+      }
+    }
+
+    return agrupamento;
+  }
+
   Widget _buildCard(Disciplina d) {
-    return Column(
-      children: [
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                d.nome,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text("Carga Horária: ${d.cargaHoraria}h"),
-            ],
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            d.nome,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        const Divider(height: 1, thickness: 1),
-      ],
+          const SizedBox(height: 6),
+          Text("Carga Horária: ${d.cargaHoraria}h"),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Verifica se o curso foi selecionado antes de mostrar as disciplinas
-    final disciplinasFiltradas =
-        cursoSelecionado == null
-            ? []
-            : disciplinas
-                .where((disciplina) => disciplina.cursoId == cursoSelecionado)
-                .toList();
+    // Agrupa as disciplinas por período
+    final disciplinasPorPeriodo = _agruparDisciplinasPorPeriodo();
 
     return Scaffold(
       appBar: AppBar(
@@ -82,13 +93,12 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
             padding: const EdgeInsets.all(16),
             child: DropdownButtonFormField<String>(
               value: cursoSelecionado,
-              items:
-                  cursos.map((curso) {
-                    return DropdownMenuItem(
-                      value: curso.id,
-                      child: Text(curso.nome),
-                    );
-                  }).toList(),
+              items: cursos.map((curso) {
+                return DropdownMenuItem(
+                  value: curso.id,
+                  child: Text(curso.nome),
+                );
+              }).toList(),
               onChanged: (novo) {
                 setState(() {
                   cursoSelecionado = novo;
@@ -100,16 +110,22 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
               ),
             ),
           ),
+
           // Verifica se o curso foi selecionado antes de exibir as disciplinas
           if (cursoSelecionado != null)
             Expanded(
               child: ListView(
-                children:
-                    disciplinasFiltradas
-                        .map<Widget>((disciplina) => _buildCard(disciplina))
-                        .toList(),
+                children: disciplinasPorPeriodo.keys.map<Widget>((periodo) {
+                  // Para cada período, cria uma seção com o título do período e as disciplinas associadas a ele
+                  var disciplinasDoPeriodo = disciplinasPorPeriodo[periodo]!;
+                  return ExpansionTile(
+                    title: Text("Período $periodo"),
+                    children: disciplinasDoPeriodo.map<Widget>((disciplina) => _buildCard(disciplina)).toList(),
+                  );
+                }).toList(),
               ),
             ),
+
           // Caso não tenha um curso selecionado, exibe uma mensagem
           if (cursoSelecionado == null)
             const Expanded(

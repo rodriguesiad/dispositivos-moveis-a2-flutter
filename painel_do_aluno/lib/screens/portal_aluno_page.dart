@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/screens/boletim_page.dart';
 import 'package:painel_do_aluno/screens/grade_curricular_page.dart';
-import 'package:painel_do_aluno/screens/pagina3.dart';
+import 'package:painel_do_aluno/screens/rematricula_page.dart';
 import 'package:painel_do_aluno/screens/pagina4.dart';
 import 'package:painel_do_aluno/screens/pagina5.dart';
 
@@ -80,7 +80,7 @@ class _PortaldoAlunoPageState extends State<PortaldoAlunoPage> {
             context,
             "Rematrícula Online",
             "Fazer a rematrícula nos semestres posteriores, conforme calendário acadêmico. Emissão da declaração de vínculo.",
-            const Pagina3(),
+            const RematriculaPage(),
           ),
           _buildCard(
             context,

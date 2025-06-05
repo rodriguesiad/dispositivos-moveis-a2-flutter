@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
+import 'package:painel_do_aluno/models/matricula_disciplina.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
 
 class BoletimPage extends StatefulWidget {
@@ -13,14 +14,84 @@ class BoletimPage extends StatefulWidget {
 class _BoletimPageState extends State<BoletimPage> {
   late List<Curso> cursos;
   late List<Disciplina> disciplinas;
+  late List<MatriculaDisciplina> matriculas;
   String? cursoSelecionado;
   final DataService dataService = DataService();
 
   @override
   void initState() {
     super.initState();
-    cursos = dataService.carregarCursos(); 
+    cursos = dataService.carregarCursos();
     disciplinas = dataService.carregarDisciplinas();
+    matriculas = dataService.carregarMatriculas(); // Carrega as matrículas
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Filtra as disciplinas com base no curso selecionado e semestre atual
+    final disciplinasFiltradas =
+        cursoSelecionado == null
+            ? []
+            : disciplinas.where((disciplina) {
+              // Verifica se a disciplina pertence ao curso selecionado e se o aluno está matriculado no semestre atual
+              final matriculaExiste = matriculas.any(
+                (matricula) =>
+                    matricula.disciplinaId == disciplina.id &&
+                    matricula.semestreAtual,
+              );
+              return matriculaExiste && disciplina.cursoId == cursoSelecionado;
+            }).toList();
+
+    return Scaffold(
+      appBar: AppBar(title: const Text("Boletim Acadêmico")),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: DropdownButtonFormField<String>(
+              value: cursoSelecionado,
+              items:
+                  cursos.map((curso) {
+                    return DropdownMenuItem(
+                      value: curso.id,
+                      child: Text(curso.nome),
+                    );
+                  }).toList(),
+              onChanged: (novo) {
+                setState(() {
+                  cursoSelecionado = novo;
+                });
+              },
+              decoration: const InputDecoration(
+                labelText: "Curso",
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          // Verifica se o curso foi selecionado antes de exibir as disciplinas
+          if (cursoSelecionado != null)
+            Expanded(
+              child: ListView(
+                children:
+                    disciplinasFiltradas
+                        .map<Widget>((disciplina) => _buildCard(disciplina))
+                        .toList(),
+              ),
+            ),
+          // Caso não tenha um curso selecionado, exibe uma mensagem
+          if (cursoSelecionado == null)
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'Por favor, selecione um curso acima para visualizar o boletim.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCard(Disciplina d) {
@@ -40,108 +111,12 @@ class _BoletimPageState extends State<BoletimPage> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text("Faltas: ${d.faltas}"),
-              Text(
-                "A1: ${d.a1.toStringAsFixed(1)}  |  A2: ${d.a2.toStringAsFixed(1)}",
-              ),
-              Text("Exame Final: ${d.exameFinal?.toStringAsFixed(1) ?? '--'}"),
-              Text("Média Semestral: ${d.mediaSemestral.toStringAsFixed(1)}"),
-              Text("Média Final: ${d.mediaFinal?.toStringAsFixed(1) ?? '--'}"),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Text("Situação: "),
-                  Text(
-                    d.situacao,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color:
-                          d.situacao == 'APROVADO'
-                              ? Colors.green
-                              : d.situacao == 'REPROVADO'
-                                  ? Colors.red
-                                  : Colors.orange,
-                    ),
-                  ),
-                ],
-              ),
+              Text("Carga Horária: ${d.cargaHoraria}h"),
             ],
           ),
         ),
         const Divider(height: 1, thickness: 1),
       ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Filtra as disciplinas com base no curso selecionado
-    final disciplinasFiltradas = cursoSelecionado == null
-        ? []
-        : disciplinas
-            .where((disciplina) => disciplina.cursoId == cursoSelecionado)
-            .toList();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text("Boletim Acadêmico", style: TextStyle(fontSize: 20)),
-            SizedBox(height: 2),
-            Text(
-              "Selecione o curso abaixo",
-              style: TextStyle(
-                fontSize: 14,
-                color: Color.fromARGB(179, 65, 65, 65),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: DropdownButtonFormField<String>(
-              value: cursoSelecionado,
-              items: cursos.map((curso) {
-                return DropdownMenuItem(
-                  value: curso.id,
-                  child: Text(curso.nome),
-                );
-              }).toList(),
-              onChanged: (novo) {
-                setState(() {
-                  cursoSelecionado = novo;
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: "Curso",
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-
-          if (cursoSelecionado != null)
-            Expanded(
-              child: ListView(
-                children: disciplinasFiltradas.map<Widget>((disciplina) => _buildCard(disciplina)).toList(),
-              ),
-            ),
-
-          if (cursoSelecionado == null)
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'Por favor, selecione um curso acima para visualizar o boletim.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ),
-            ),
-        ],
-      ),
     );
   }
 }
