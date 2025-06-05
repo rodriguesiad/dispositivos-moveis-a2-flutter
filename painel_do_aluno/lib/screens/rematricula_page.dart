@@ -34,26 +34,30 @@ class _RematriculaPageState extends State<RematriculaPage> {
 
     setState(() {
       // Filtra as disciplinas do curso selecionado
-      disciplinasDisponiveis = disciplinas.where((disciplina) {
-        // Verifica se a disciplina pertence ao curso selecionado
-        if (disciplina.cursoId != cursoSelecionado) return false;
+      disciplinasDisponiveis =
+          disciplinas.where((disciplina) {
+            // Verifica se a disciplina pertence ao curso selecionado
+            if (disciplina.cursoId != cursoSelecionado) return false;
 
-        // Verifica se o aluno já está matriculado ou aprovado
-        final matriculaExiste = matriculas.any(
-          (matricula) =>
-              matricula.disciplinaId == disciplina.id &&
-              matricula.semestreAtual,
-        );
-
-        // Exibe disciplinas que o aluno ainda não está matriculado no semestre atual
-        // ou que o aluno já foi aprovado
-        return !matriculaExiste ||
-            matriculas.any(
+            // Verifica se o aluno está matriculado no semestre atual ou aprovado em semestres passados
+            final matriculaSemestreAtual = matriculas.any(
               (matricula) =>
                   matricula.disciplinaId == disciplina.id &&
-                  matricula.situacao != 'APROVADO',
+                  matricula.semestreAtual,
             );
-      }).toList();
+
+            final matriculaAprovadaEmSemestreAnterior = matriculas.any(
+              (matricula) =>
+                  matricula.disciplinaId == disciplina.id &&
+                  !matricula.semestreAtual && // semestre anterior
+                  matricula.situacao == 'APROVADO', // aprovado
+            );
+
+            // Exibe disciplinas que o aluno ainda não está matriculado no semestre atual
+            // ou que o aluno já foi aprovado em semestres passados
+            return !matriculaSemestreAtual &&
+                !matriculaAprovadaEmSemestreAnterior;
+          }).toList();
     });
   }
 
@@ -86,12 +90,13 @@ class _RematriculaPageState extends State<RematriculaPage> {
             // Dropdown para selecionar o curso
             DropdownButtonFormField<String>(
               value: cursoSelecionado,
-              items: cursos.map((curso) {
-                return DropdownMenuItem(
-                  value: curso.id,
-                  child: Text(curso.nome),
-                );
-              }).toList(),
+              items:
+                  cursos.map((curso) {
+                    return DropdownMenuItem(
+                      value: curso.id,
+                      child: Text(curso.nome),
+                    );
+                  }).toList(),
               onChanged: (novo) {
                 setState(() {
                   cursoSelecionado = novo;
@@ -107,24 +112,25 @@ class _RematriculaPageState extends State<RematriculaPage> {
             // Exibe as disciplinas disponíveis para matrícula
             Expanded(
               child: ListView(
-                children: disciplinasDisponiveis.map<Widget>((disciplina) {
-                  return CheckboxListTile(
-                    title: Text(disciplina.nome),
-                    subtitle: Text(
-                      "Carga Horária: ${disciplina.cargaHoraria}h",
-                    ),
-                    value: disciplinasSelecionadas.contains(disciplina),
-                    onChanged: (bool? value) {
-                      setState(() {
-                        if (value == true) {
-                          disciplinasSelecionadas.add(disciplina);
-                        } else {
-                          disciplinasSelecionadas.remove(disciplina);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
+                children:
+                    disciplinasDisponiveis.map<Widget>((disciplina) {
+                      return CheckboxListTile(
+                        title: Text(disciplina.nome),
+                        subtitle: Text(
+                          "Carga Horária: ${disciplina.cargaHoraria}h",
+                        ),
+                        value: disciplinasSelecionadas.contains(disciplina),
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value == true) {
+                              disciplinasSelecionadas.add(disciplina);
+                            } else {
+                              disciplinasSelecionadas.remove(disciplina);
+                            }
+                          });
+                        },
+                      );
+                    }).toList(),
               ),
             ),
 
@@ -143,7 +149,10 @@ class _RematriculaPageState extends State<RematriculaPage> {
 
                   // Redireciona para a tela principal (ex: Dashboard)
                   Future.delayed(const Duration(seconds: 2), () {
-                    Navigator.pushReplacementNamed(context, '/'); // Redirecionando para a tela principal
+                    Navigator.pushReplacementNamed(
+                      context,
+                      '/',
+                    ); // Redirecionando para a tela principal
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -111,7 +111,25 @@ class _BoletimPageState extends State<BoletimPage> {
     );
   }
 
+  // Função para exibir as informações detalhadas de cada disciplina
   Widget _buildCard(Disciplina d) {
+    // Encontra a matrícula da disciplina no semestre atual
+    final matricula = matriculas.firstWhere(
+      (m) => m.disciplinaId == d.id && m.semestreAtual,
+      orElse: () => MatriculaDisciplina(
+        id: '',
+        disciplinaId: '',
+        alunoId: '',
+        faltas: 0,
+        a1: 0.0,
+        a2: 0.0,
+        exameFinal: 0.0,
+        mediaSemestral: 0.0,
+        situacao: 'NÃO MATRICULADO',
+        semestreAtual: false
+      ),
+    );
+
     return Column(
       children: [
         Container(
@@ -128,7 +146,30 @@ class _BoletimPageState extends State<BoletimPage> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text("Carga Horária: ${d.cargaHoraria}h"),
+              Text("Faltas: ${matricula.faltas}"),
+              Text("A1: ${matricula.a1.toStringAsFixed(1)}"),
+              Text("A2: ${matricula.a2.toStringAsFixed(1)}"),
+              Text(
+                "Exame Final: ${matricula.exameFinal?.toStringAsFixed(1) ?? '--'}",
+              ),
+              Text("Média Final: ${matricula.mediaSemestral.toStringAsFixed(1)}"),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Text("Situação: "),
+                  Text(
+                    matricula.situacao,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: matricula.situacao == 'APROVADO'
+                          ? Colors.green
+                          : matricula.situacao == 'REPROVADO'
+                              ? Colors.red
+                              : Colors.orange,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

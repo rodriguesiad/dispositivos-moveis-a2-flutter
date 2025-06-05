@@ -3,7 +3,7 @@ import 'package:painel_do_aluno/screens/boletim_page.dart';
 import 'package:painel_do_aluno/screens/grade_curricular_page.dart';
 import 'package:painel_do_aluno/screens/rematricula_page.dart';
 import 'package:painel_do_aluno/screens/pagina4.dart';
-import 'package:painel_do_aluno/screens/pagina5.dart';
+import 'package:painel_do_aluno/screens/analise_curricular_page.dart';
 
 class PortaldoAlunoPage extends StatefulWidget {
   const PortaldoAlunoPage({super.key});
@@ -92,7 +92,7 @@ class _PortaldoAlunoPageState extends State<PortaldoAlunoPage> {
             context,
             "Análise Curricular",
             "Análise curricular completa",
-            const Pagina5(),
+            const AnaliseCurricularPage(),
           ),
         ],
       ),

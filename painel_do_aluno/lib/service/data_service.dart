@@ -103,7 +103,7 @@ class DataService {
         exameFinal: 7.0,
         mediaSemestral: 4.75,
         mediaFinal: 6.0,
-        situacao: 'APROVADO',
+        situacao: 'MATRICULADO',
         semestreAtual: true,  // Indica que esta matrícula é do semestre atual
       ),
       MatriculaDisciplina(
@@ -116,7 +116,7 @@ class DataService {
         exameFinal: null,
         mediaSemestral: 7.5,
         mediaFinal: 7.5,
-        situacao: 'APROVADO',
+        situacao: 'MATRICULADO',
         semestreAtual: true,  // Indica que esta matrícula é do semestre atual
       ),
       MatriculaDisciplina(
