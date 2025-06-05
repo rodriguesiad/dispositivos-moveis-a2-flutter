@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/screens/boletim_page.dart';
 import 'package:painel_do_aluno/screens/grade_curricular_page.dart';
 import 'package:painel_do_aluno/screens/rematricula_page.dart';
-import 'package:painel_do_aluno/screens/pagina4.dart';
+import 'package:painel_do_aluno/screens/situacao_academica_page.dart';
 import 'package:painel_do_aluno/screens/analise_curricular_page.dart';
 
 class PortaldoAlunoPage extends StatefulWidget {
@@ -86,7 +86,7 @@ class _PortaldoAlunoPageState extends State<PortaldoAlunoPage> {
             context,
             "Situação Acadêmica",
             "Veja a sua situação junto a secretaria e demais departamentos da unitins.",
-            const Pagina4(),
+            const SituacaoAcademicaPage(),
           ),
           _buildCard(
             context,
