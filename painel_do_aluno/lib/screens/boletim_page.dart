@@ -29,34 +29,52 @@ class _BoletimPageState extends State<BoletimPage> {
   @override
   Widget build(BuildContext context) {
     // Filtra as disciplinas com base no curso selecionado e semestre atual
-    final disciplinasFiltradas =
-        cursoSelecionado == null
-            ? []
-            : disciplinas.where((disciplina) {
-              // Verifica se a disciplina pertence ao curso selecionado e se o aluno está matriculado no semestre atual
-              final matriculaExiste = matriculas.any(
-                (matricula) =>
-                    matricula.disciplinaId == disciplina.id &&
-                    matricula.semestreAtual,
-              );
-              return matriculaExiste && disciplina.cursoId == cursoSelecionado;
-            }).toList();
+    final disciplinasFiltradas = cursoSelecionado == null
+        ? []
+        : disciplinas.where((disciplina) {
+            // Verifica se a disciplina pertence ao curso selecionado e se o aluno está matriculado no semestre atual
+            final matriculaExiste = matriculas.any(
+              (matricula) =>
+                  matricula.disciplinaId == disciplina.id &&
+                  matricula.semestreAtual,
+            );
+            return matriculaExiste && disciplina.cursoId == cursoSelecionado;
+          }).toList();
+
+    // Definindo o título e o subtítulo
+    final subtitle = cursoSelecionado == null
+        ? ""
+        : cursos.firstWhere((c) => c.id == cursoSelecionado).nome;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Boletim Acadêmico")),
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Boletim Acadêmico", style: TextStyle(fontSize: 20)),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,  // Agora não está em um widget const
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color.fromARGB(179, 65, 65, 65),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
             child: DropdownButtonFormField<String>(
               value: cursoSelecionado,
-              items:
-                  cursos.map((curso) {
-                    return DropdownMenuItem(
-                      value: curso.id,
-                      child: Text(curso.nome),
-                    );
-                  }).toList(),
+              items: cursos.map((curso) {
+                return DropdownMenuItem(
+                  value: curso.id,
+                  child: Text(curso.nome),
+                );
+              }).toList(),
               onChanged: (novo) {
                 setState(() {
                   cursoSelecionado = novo;
@@ -72,10 +90,9 @@ class _BoletimPageState extends State<BoletimPage> {
           if (cursoSelecionado != null)
             Expanded(
               child: ListView(
-                children:
-                    disciplinasFiltradas
-                        .map<Widget>((disciplina) => _buildCard(disciplina))
-                        .toList(),
+                children: disciplinasFiltradas
+                    .map<Widget>((disciplina) => _buildCard(disciplina))
+                    .toList(),
               ),
             ),
           // Caso não tenha um curso selecionado, exibe uma mensagem

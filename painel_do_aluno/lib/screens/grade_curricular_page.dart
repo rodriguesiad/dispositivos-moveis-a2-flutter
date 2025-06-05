@@ -70,16 +70,22 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
     // Agrupa as disciplinas por período
     final disciplinasPorPeriodo = _agruparDisciplinasPorPeriodo();
 
+    // Calculando o subtítulo com base no curso selecionado
+    final subtitle = cursoSelecionado == null
+        ? "Selecione um curso"
+        : cursos.firstWhere((c) => c.id == cursoSelecionado).nome;
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text("Matriz Curricular", style: TextStyle(fontSize: 20)),
-            SizedBox(height: 2),
+          children: [
+            const Text("Matriz Curricular", style: TextStyle(fontSize: 20)),
+            const SizedBox(height: 2),
+            // Exibe o subtítulo de forma dinâmica
             Text(
-              "Selecione o curso abaixo",
-              style: TextStyle(
+              subtitle,
+              style: const TextStyle(
                 fontSize: 14,
                 color: Color.fromARGB(179, 65, 65, 65),
               ),
