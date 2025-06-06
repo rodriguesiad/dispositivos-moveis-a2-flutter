@@ -24,4 +24,20 @@ class MatriculaDisciplina {
     required this.situacao,
     required this.semestreAtual,
   });
+
+  factory MatriculaDisciplina.fromJson(Map<String, dynamic> json) {
+    return MatriculaDisciplina(
+      id: json['id'],
+      disciplinaId: json['disciplinaId'],
+      alunoId: json['alunoId'],
+      faltas: json['faltas'],
+      a1: json['a1'],
+      a2: json['a2'],
+      exameFinal: json['exameFinal'],
+      mediaSemestral: json['mediaSemestral'],
+      mediaFinal: json['mediaFinal'],
+      situacao: json['situacao'],
+      semestreAtual: json['semestreAtual'],
+    );
+  }
 }

@@ -1,0 +1,677 @@
+{
+    "cursos": [
+        {
+            "id": "1",
+            "nome": "SISTEMAS DE INFORMAÇÃO / CÂMPUS PALMAS"
+        },
+        {
+            "id": "2",
+            "nome": "LIBRAS / EXTENSÃO (Matriculado)"
+        }
+    ],
+    "disciplinas": [
+        {
+            "id": "011001131",
+            "nome": "ALGORITMOS E PROGRAMAÇÃO I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "1º Período"
+        },
+        {
+            "id": "011001132",
+            "nome": "ARQUITETURA E ORGANIZAÇÃO DE COMPUTADORES I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "1º Período"
+        },
+        {
+            "id": "011001133",
+            "nome": "DESENVOLVIMENTO FRONT-END",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "1º Período"
+        },
+        {
+            "id": "011001134",
+            "nome": "INGLÊS INSTRUMENTAL",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "1º Período"
+        },
+        {
+            "id": "011001135",
+            "nome": "LEITURA E PRÁTICA DE PRODUÇÃO TEXTUAL",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "1º Período"
+        },
+        {
+            "id": "011001136",
+            "nome": "PRÉ-CÁLCULO",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "011001137",
+            "nome": "GESTÃO DE PROCESSOS EMPRESARIAIS",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "011001138",
+            "nome": "LÓGICA MATEMÁTICA",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "011001139",
+            "nome": "ARQUITETURA E ORGANIZAÇÃO DE COMPUTADORES II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "011001140",
+            "nome": "BANCO DE DADOS I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "011001141",
+            "nome": "ALGORITMOS E PROGRAMAÇÃO II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "011001142",
+            "nome": "CÁLCULO DIFERENCIAL E INTEGRAL",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "3º Período"
+        },
+        {
+            "id": "011001143",
+            "nome": "METODOLOGIA CIENTÍFICA E DA PESQUISA",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "3º Período"
+        },
+        {
+            "id": "011001144",
+            "nome": "SOCIEDADE E TECNOLOGIA",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "3º Período"
+        },
+        {
+            "id": "011001145",
+            "nome": "ESTRUTURAS DE DADOS",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "3º Período"
+        },
+        {
+            "id": "011001146",
+            "nome": "TÓPICOS EM PROGRAMAÇÃO I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "3º Período"
+        },
+        {
+            "id": "011001147",
+            "nome": "BANCO DE DADOS II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "3º Período"
+        },
+        {
+            "id": "011001148",
+            "nome": "EMPREENDEDORISMO E INOVAÇÃO",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "3º Período"
+        },
+        {
+            "id": "011001149",
+            "nome": "PROJETO INTEGRADOR I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "4º Período"
+        },
+        {
+            "id": "011001150",
+            "nome": "FUNDAMENTOS DE SISTEMAS DE INFORMAÇÃO",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "4º Período"
+        },
+        {
+            "id": "011001151",
+            "nome": "ENGENHARIA DE REQUISITOS",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "4º Período"
+        },
+        {
+            "id": "011001152",
+            "nome": "ENGENHARIA DE SOFTWARE I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "4º Período"
+        },
+        {
+            "id": "011001153",
+            "nome": "TÓPICOS EM PROGRAMAÇÃO II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "4º Período"
+        },
+        {
+            "id": "011001154",
+            "nome": "SISTEMAS OPERACIONAIS",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "4º Período"
+        },
+        {
+            "id": "011001155",
+            "nome": "ASPECTOS TEÓRICOS DE COMPUTAÇÃO",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "4º Período"
+        },
+        {
+            "id": "011001156",
+            "nome": "PROJETO INTEGRADOR II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "5º Período"
+        },
+        {
+            "id": "011001157",
+            "nome": "GESTÃO ESTRATÉGICA DA INFORMAÇÃO",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "5º Período"
+        },
+        {
+            "id": "011001158",
+            "nome": "OTIMIZAÇÃO PARA SISTEMAS",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "5º Período"
+        },
+        {
+            "id": "011001159",
+            "nome": "ENGENHARIA DE SOFTWARE II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "5º Período"
+        },
+        {
+            "id": "011001160",
+            "nome": "COMPUTAÇÃO ORIENTADA A SERVIÇOS",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "5º Período"
+        },
+        {
+            "id": "011001161",
+            "nome": "REDES DE COMPUTADORES I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "5º Período"
+        },
+        {
+            "id": "011001162",
+            "nome": "TÓPICOS EM PROGRAMAÇÃO III",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "5º Período"
+        },
+        {
+            "id": "011001163",
+            "nome": "ESTÁGIO SUPERVISIONADO",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "6º Período"
+        },
+        {
+            "id": "011001164",
+            "nome": "INTERFACE HUMANO- COMPUTADOR",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "6º Período"
+        },
+        {
+            "id": "011001165",
+            "nome": "GOVERNANÇA DE TI",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "6º Período"
+        },
+        {
+            "id": "011001166",
+            "nome": "ENGENHARIA DE QUALIDADE",
+            "cargaHoraria": 30,
+            "cursoId": "1",
+            "periodo": "6º Período"
+        },
+        {
+            "id": "011001167",
+            "nome": "ESTATÍSTICA COMPUTACIONAL",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "6º Período"
+        },
+        {
+            "id": "011001168",
+            "nome": "INTELIGÊNCIA ARTIFICIAL",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "6º Período"
+        },
+        {
+            "id": "011001169",
+            "nome": "REDES DE COMPUTADORES II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "6º Período"
+        },
+        {
+            "id": "011001170",
+            "nome": "PROGRAMAÇÃO PARA DISPOSITIVOS MÓVEIS I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "6º Período"
+        },
+        {
+            "id": "011001171",
+            "nome": "ELABORAÇÃO E GESTÃO DE PROJETOS",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "7º Período"
+        },
+        {
+            "id": "011001172",
+            "nome": "SISTEMAS DISTRIBUÍDOS",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "7º Período"
+        },
+        {
+            "id": "011001173",
+            "nome": "MINERAÇÃO DE DADOS",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "7º Período"
+        },
+        {
+            "id": "011001174",
+            "nome": "PROGRAMAÇÃO PARA DISPOSITIVOS MÓVEIS II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "7º Período"
+        },
+        {
+            "id": "011001175",
+            "nome": "TRABALHO DE CONCLUSÃO DE CURSO I",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "7º Período"
+        },
+        {
+            "id": "011001176",
+            "nome": "SEGURANÇA E AUDITORIA DE SISTEMAS",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "8º Período"
+        },
+        {
+            "id": "011001177",
+            "nome": "DIREITO E LEGISLAÇÃO EM INFORMÁTICA",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "8º Período"
+        },
+        {
+            "id": "011001178",
+            "nome": "SIMULAÇÃO DE SISTEMAS DE INFORMAÇÃO",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "8º Período"
+        },
+        {
+            "id": "011001179",
+            "nome": "INFRAESTRUTURA DE REDES COMO SERVIÇOS",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "8º Período"
+        },
+        {
+            "id": "011001180",
+            "nome": "TRABALHO DE CONCLUSÃO DE CURSO II",
+            "cargaHoraria": 60,
+            "cursoId": "1",
+            "periodo": "8º Período"
+        },
+        {
+            "id": "028002003",
+            "nome": "LIBRAS BÁSICO I",
+            "cargaHoraria": 60,
+            "cursoId": "2",
+            "periodo": "1º Período"
+        },
+        {
+            "id": "028002001",
+            "nome": "ASPECTOS GERAIS DA LIBRAS",
+            "cargaHoraria": 20,
+            "cursoId": "2",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "028002002",
+            "nome": "VOCABULÁRIO BÁSICO DA LIBRAS",
+            "cargaHoraria": 20,
+            "cursoId": "2",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "028002004",
+            "nome": "LIBRAS INTERMEDIÁRIO",
+            "cargaHoraria": 60,
+            "cursoId": "2",
+            "periodo": "2º Período"
+        },
+        {
+            "id": "028002005",
+            "nome": "LIBRAS BÁSICO II",
+            "cargaHoraria": 60,
+            "cursoId": "2",
+            "periodo": "2º Período"
+        }
+    ],
+    "matriculas": [
+        {
+            "id": "1",
+            "disciplinaId": "011001168",
+            "alunoId": "1",
+            "faltas": 16,
+            "a1": null,
+            "a2": null,
+            "exameFinal": null,
+            "mediaSemestral": null,
+            "mediaFinal": null,
+            "situacao": "MATRICULADO",
+            "semestreAtual": true
+        },
+        {
+            "id": "2",
+            "disciplinaId": "011001173",
+            "alunoId": "1",
+            "faltas": 16,
+            "a1": 8.6,
+            "a2": null,
+            "exameFinal": null,
+            "mediaSemestral": null,
+            "mediaFinal": null,
+            "situacao": "MATRICULADO",
+            "semestreAtual": true
+        },
+        {
+            "id": "3",
+            "disciplinaId": "011001174",
+            "alunoId": "1",
+            "faltas": 12,
+            "a1": null,
+            "a2": null,
+            "exameFinal": null,
+            "mediaSemestral": null,
+            "mediaFinal": null,
+            "situacao": "MATRICULADO",
+            "semestreAtual": true
+        },
+        {
+            "id": "4",
+            "disciplinaId": "011001172",
+            "alunoId": "1",
+            "faltas": 12,
+            "a1": 9.0,
+            "a2": null,
+            "exameFinal": null,
+            "mediaSemestral": null,
+            "mediaFinal": null,
+            "situacao": "MATRICULADO",
+            "semestreAtual": true
+        },
+        {
+            "id": "5",
+            "disciplinaId": "011001188",
+            "alunoId": "1",
+            "faltas": 4,
+            "a1": null,
+            "a2": null,
+            "exameFinal": null,
+            "mediaSemestral": null,
+            "mediaFinal": null,
+            "situacao": "MATRICULADO",
+            "semestreAtual": true
+        },
+        {
+            "id": "6",
+            "disciplinaId": "011001175",
+            "alunoId": "1",
+            "faltas": 10,
+            "a1": null,
+            "a2": null,
+            "exameFinal": null,
+            "mediaSemestral": null,
+            "mediaFinal": null,
+            "situacao": "MATRICULADO",
+            "semestreAtual": true
+        },
+        {
+            "id": "7",
+            "disciplinaId": "011001131",
+            "alunoId": "1",
+            "faltas": 3,
+            "a1": 8.5,
+            "a2": 7.0,
+            "exameFinal": null,
+            "mediaSemestral": 7.75,
+            "mediaFinal": 7.75,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "8",
+            "disciplinaId": "011001132",
+            "alunoId": "1",
+            "faltas": 4,
+            "a1": 7.5,
+            "a2": 6.5,
+            "exameFinal": null,
+            "mediaSemestral": 7.0,
+            "mediaFinal": 7.0,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "9",
+            "disciplinaId": "011001133",
+            "alunoId": "1",
+            "faltas": 2,
+            "a1": 9.0,
+            "a2": 8.0,
+            "exameFinal": null,
+            "mediaSemestral": 8.5,
+            "mediaFinal": 8.5,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "10",
+            "disciplinaId": "011001134",
+            "alunoId": "1",
+            "faltas": 1,
+            "a1": 9.5,
+            "a2": 8.0,
+            "exameFinal": null,
+            "mediaSemestral": 8.75,
+            "mediaFinal": 8.75,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "11",
+            "disciplinaId": "011001135",
+            "alunoId": "1",
+            "faltas": 5,
+            "a1": 7.0,
+            "a2": 6.0,
+            "exameFinal": null,
+            "mediaSemestral": 6.5,
+            "mediaFinal": 6.5,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "12",
+            "disciplinaId": "011001136",
+            "alunoId": "1",
+            "faltas": 3,
+            "a1": 7.5,
+            "a2": 6.5,
+            "exameFinal": null,
+            "mediaSemestral": 7.0,
+            "mediaFinal": 7.0,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "13",
+            "disciplinaId": "011001137",
+            "alunoId": "1",
+            "faltas": 4,
+            "a1": 6.0,
+            "a2": 7.5,
+            "exameFinal": null,
+            "mediaSemestral": 6.75,
+            "mediaFinal": 6.75,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "14",
+            "disciplinaId": "011001138",
+            "alunoId": "1",
+            "faltas": 2,
+            "a1": 8.0,
+            "a2": 7.0,
+            "exameFinal": null,
+            "mediaSemestral": 7.5,
+            "mediaFinal": 7.5,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "15",
+            "disciplinaId": "011001139",
+            "alunoId": "1",
+            "faltas": 3,
+            "a1": 9.0,
+            "a2": 8.5,
+            "exameFinal": null,
+            "mediaSemestral": 8.75,
+            "mediaFinal": 8.75,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "16",
+            "disciplinaId": "011001140",
+            "alunoId": "1",
+            "faltas": 1,
+            "a1": 8.5,
+            "a2": 7.5,
+            "exameFinal": null,
+            "mediaSemestral": 8.0,
+            "mediaFinal": 8.0,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "17",
+            "disciplinaId": "011001141",
+            "alunoId": "1",
+            "faltas": 3,
+            "a1": 7.0,
+            "a2": 6.5,
+            "exameFinal": null,
+            "mediaSemestral": 6.75,
+            "mediaFinal": 6.75,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "18",
+            "disciplinaId": "011001142",
+            "alunoId": "1",
+            "faltas": 0,
+            "a1": 9.5,
+            "a2": 8.0,
+            "exameFinal": null,
+            "mediaSemestral": 8.75,
+            "mediaFinal": 8.75,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "19",
+            "disciplinaId": "011001143",
+            "alunoId": "1",
+            "faltas": 1,
+            "a1": 8.0,
+            "a2": 7.5,
+            "exameFinal": null,
+            "mediaSemestral": 7.75,
+            "mediaFinal": 7.75,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        },
+        {
+            "id": "20",
+            "disciplinaId": "011001146",
+            "alunoId": "1",
+            "faltas": 2,
+            "a1": 8.0,
+            "a2": 7.5,
+            "exameFinal": null,
+            "mediaSemestral": 7.75,
+            "mediaFinal": 7.75,
+            "situacao": "APROVADO",
+            "semestreAtual": false
+        }
+    ],
+    "alunos": [
+        {
+            "id": "1",
+            "nome": "João Silva",
+            "email": "joao.silva@email.com",
+            "cpf": "12345678901",
+            "senha": "senha123",
+            "status": "Ativo",
+            "numeroMatricula": "12345",
+            "simIdentidade": true,
+            "simCertNascimento": true,
+            "simHistoricoEscolar": true,
+            "simDiploma": false,
+            "simCompVacina": true
+        }
+    ]
+}

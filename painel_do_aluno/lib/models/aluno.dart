@@ -26,4 +26,21 @@ class Aluno {
     required this.simDiploma,
     required this.simCompVacina,
   });
+
+  factory Aluno.fromJson(Map<String, dynamic> json) {
+    return Aluno(
+      id: json['id'],
+      nome: json['nome'],
+      email: json['email'],
+      cpf: json['cpf'],
+      senha: json['senha'],
+      status: json['status'],
+      numeroMatricula: json['numeroMatricula'],
+      simIdentidade: json['simIdentidade'],
+      simCertNascimento: json['simCertNascimento'],
+      simHistoricoEscolar: json['simHistoricoEscolar'],
+      simDiploma: json['simDiploma'],
+      simCompVacina: json['simCompVacina'],
+    );
+  }
 }
