@@ -691,10 +691,10 @@
   "alunos": [
     {
       "id": "1",
-      "nome": "João Silva",
-      "email": "joao.silva@email.com",
+      "nome": "Maria Silva",
+      "email": "maria@email.com",
       "cpf": "12345678901",
-      "senha": "senha123",
+      "senha": "123",
       "status": "Ativo",
       "numeroMatricula": "12345",
       "simIdentidade": true,
