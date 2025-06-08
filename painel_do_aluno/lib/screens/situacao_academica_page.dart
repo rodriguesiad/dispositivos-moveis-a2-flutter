@@ -4,42 +4,67 @@ import 'package:painel_do_aluno/widgets/aluno_info_widget.dart';
 import 'package:painel_do_aluno/widgets/lista_documentos_widget.dart';
 import 'package:painel_do_aluno/widgets/portal_app_header.dart';
 
-class SituacaoAcademicaPage extends StatelessWidget {
+class SituacaoAcademicaPage extends StatefulWidget {
   final Aluno aluno;
   const SituacaoAcademicaPage({super.key, required this.aluno});
 
   @override
-  Widget build(BuildContext context) {
+  State<SituacaoAcademicaPage> createState() => _SituacaoAcademicaPageState();
+}
+
+class _SituacaoAcademicaPageState extends State<SituacaoAcademicaPage> {
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _snackBarController;
+
+  @override
+  void initState() {
+    super.initState();
+
     final documentos = [
-      {'nome': 'Carteira de Identidade/RG', 'status': aluno.simIdentidade},
-      {
-        'nome': 'Certidão de Nascimento/Casamento',
-        'status': aluno.simCertNascimento,
-      },
-      {
-        'nome': 'Histórico Escolar - Ensino Médio',
-        'status': aluno.simHistoricoEscolar,
-      },
+      {'nome': 'Carteira de Identidade/RG', 'status': widget.aluno.simIdentidade},
+      {'nome': 'Certidão de Nascimento/Casamento', 'status': widget.aluno.simCertNascimento},
+      {'nome': 'Histórico Escolar - Ensino Médio', 'status': widget.aluno.simHistoricoEscolar},
       {'nome': 'CPF (CIC)', 'status': true},
-      {'nome': 'Diploma/Certificado Registrado', 'status': aluno.simDiploma},
-      {'nome': 'Comprovante de Vacina', 'status': aluno.simCompVacina},
+      {'nome': 'Diploma/Certificado Registrado', 'status': widget.aluno.simDiploma},
+      {'nome': 'Comprovante de Vacina', 'status': widget.aluno.simCompVacina},
     ];
 
     final hasPendencia = documentos.any((doc) => !(doc['status'] as bool));
 
     if (hasPendencia) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        _snackBarController = ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
               'Pendência(s)! Você possui pendência de documento(s), favor procurar a secretaria.',
             ),
             backgroundColor: Colors.red,
-            duration: Duration(days: 365),
+            duration: Duration(days: 1), // Visível enquanto estiver na tela
           ),
         );
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _snackBarController?.close(); // Garante que o snackbar seja fechado ao sair da tela
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final aluno = widget.aluno;
+
+    final documentos = [
+      {'nome': 'Carteira de Identidade/RG', 'status': aluno.simIdentidade},
+      {'nome': 'Certidão de Nascimento/Casamento', 'status': aluno.simCertNascimento},
+      {'nome': 'Histórico Escolar - Ensino Médio', 'status': aluno.simHistoricoEscolar},
+      {'nome': 'CPF (CIC)', 'status': true},
+      {'nome': 'Diploma/Certificado Registrado', 'status': aluno.simDiploma},
+      {'nome': 'Comprovante de Vacina', 'status': aluno.simCompVacina},
+    ];
 
     return Scaffold(
       body: Column(
