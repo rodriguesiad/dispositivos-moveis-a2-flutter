@@ -3,6 +3,9 @@ import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
 import 'package:painel_do_aluno/models/matricula.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
+import 'package:painel_do_aluno/widgets/progresso_curso_widget.dart';
+import 'package:painel_do_aluno/widgets/lista_disciplinas_widget.dart';
+import 'package:painel_do_aluno/widgets/curso_dropdown_widget.dart';
 
 class AnaliseCurricularPage extends StatefulWidget {
   const AnaliseCurricularPage({super.key});
@@ -136,88 +139,32 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Dropdown para selecionar o curso
-                        DropdownButtonFormField<String>(
-                          value: cursoSelecionado,
-                          items:
-                              cursos!.map((curso) {
-                                return DropdownMenuItem(
-                                  value: curso.id,
-                                  child: Text(curso.nome),
-                                );
-                              }).toList(),
+                        CursoDropdownWidget(
+                          cursos: cursos!,
+                          cursoSelecionado: cursoSelecionado,
                           onChanged: (novo) {
                             setState(() {
                               cursoSelecionado = novo;
                             });
                           },
-                          decoration: const InputDecoration(
-                            labelText: "Curso",
-                            border: OutlineInputBorder(),
-                          ),
                         ),
                         const SizedBox(height: 20),
 
-                        // Barra de progresso do curso
                         if (cursoSelecionado != null)
-                          Column(
-                            children: [
-                              Text(
-                                "Progresso do Curso: ${progressoCurso.toStringAsFixed(1)}%",
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(height: 10),
-                              LinearProgressIndicator(
-                                value: progressoCurso / 100,
-                                minHeight: 8,
-                                backgroundColor: Colors.grey[300],
-                                color: Colors.green,
-                              ),
-                            ],
-                          ),
+                          ProgressoCursoWidget(progresso: progressoCurso),
                         const SizedBox(height: 20),
 
-                        // Disciplinas Concluídas
                         if (disciplinasConcluidas.isNotEmpty)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Disciplinas Concluídas:",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              const SizedBox(height: 8),
-                              ...disciplinasConcluidas.map((disciplina) {
-                                return ListTile(
-                                  title: Text(disciplina.nome),
-                                  subtitle: Text(
-                                    "Carga Horária: ${disciplina.cargaHoraria}h",
-                                  ),
-                                );
-                              }),
-                            ],
+                          ListaDisciplinasWidget(
+                            titulo: "Disciplinas Concluídas:",
+                            disciplinas: disciplinasConcluidas,
                           ),
                         const SizedBox(height: 20),
 
-                        // Disciplinas Pendentes
                         if (disciplinasPendentes.isNotEmpty)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Disciplinas Pendentes:",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              const SizedBox(height: 8),
-                              ...disciplinasPendentes.map((disciplina) {
-                                return ListTile(
-                                  title: Text(disciplina.nome),
-                                  subtitle: Text(
-                                    "Carga Horária: ${disciplina.cargaHoraria}h",
-                                  ),
-                                );
-                              }),
-                            ],
+                          ListaDisciplinasWidget(
+                            titulo: "Disciplinas Pendentes:",
+                            disciplinas: disciplinasPendentes,
                           ),
                       ],
                     ),

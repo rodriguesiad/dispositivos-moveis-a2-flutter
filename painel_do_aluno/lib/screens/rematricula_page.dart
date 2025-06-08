@@ -3,6 +3,8 @@ import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
 import 'package:painel_do_aluno/models/matricula.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
+import 'package:painel_do_aluno/widgets/curso_dropdown_widget.dart';
+import 'package:painel_do_aluno/widgets/lista_disciplinas_selecionaveis.dart';
 
 class RematriculaPage extends StatefulWidget {
   const RematriculaPage({super.key});
@@ -136,56 +138,32 @@ class _RematriculaPageState extends State<RematriculaPage> {
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        DropdownButtonFormField<String>(
-                          value: cursoSelecionado,
-                          items:
-                              cursos.map((curso) {
-                                return DropdownMenuItem(
-                                  value: curso.id,
-                                  child: Text(curso.nome),
-                                );
-                              }).toList(),
+                        CursoDropdownWidget(
+                          cursos: cursos,
+                          cursoSelecionado: cursoSelecionado,
                           onChanged: (novo) {
                             setState(() {
                               cursoSelecionado = novo;
-                              disciplinasSelecionadas.clear(); // reseta seleção
+                              disciplinasSelecionadas.clear();
                             });
                           },
-                          decoration: const InputDecoration(
-                            labelText: "Curso",
-                            border: OutlineInputBorder(),
-                          ),
                         ),
                         const SizedBox(height: 20),
 
                         if (cursoSelecionado != null)
                           Expanded(
-                            child: ListView(
-                              children:
-                                  disciplinasDisponiveis.map((disciplina) {
-                                    return CheckboxListTile(
-                                      title: Text(disciplina.nome),
-                                      subtitle: Text(
-                                        "Carga Horária: ${disciplina.cargaHoraria}h",
-                                      ),
-                                      value: disciplinasSelecionadas.contains(
-                                        disciplina,
-                                      ),
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          if (value == true) {
-                                            disciplinasSelecionadas.add(
-                                              disciplina,
-                                            );
-                                          } else {
-                                            disciplinasSelecionadas.remove(
-                                              disciplina,
-                                            );
-                                          }
-                                        });
-                                      },
-                                    );
-                                  }).toList(),
+                            child: ListaDisciplinasSelecionaveis(
+                              disciplinasDisponiveis: disciplinasDisponiveis,
+                              disciplinasSelecionadas: disciplinasSelecionadas,
+                              onSelecionar: (disciplina, selecionada) {
+                                setState(() {
+                                  if (selecionada) {
+                                    disciplinasSelecionadas.add(disciplina);
+                                  } else {
+                                    disciplinasSelecionadas.remove(disciplina);
+                                  }
+                                });
+                              },
                             ),
                           ),
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
+import 'package:painel_do_aluno/widgets/curso_dropdown_widget.dart';
+import 'package:painel_do_aluno/widgets/grade_curricular_widget.dart';
 
 class GradeCurricularPage extends StatefulWidget {
   const GradeCurricularPage({super.key});
@@ -24,16 +26,17 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
     disciplinasFuture = dataService.carregarDisciplinas();
   }
 
-  // Agrupamento por período com base nas disciplinas do curso
   Map<String, List<Disciplina>> _agruparDisciplinasPorPeriodo(
-      List<Disciplina> disciplinas) {
+    List<Disciplina> disciplinas,
+  ) {
     Map<String, List<Disciplina>> agrupamento = {};
 
-    var disciplinasFiltradas = cursoSelecionado == null
-        ? []
-        : disciplinas
-            .where((disciplina) => disciplina.cursoId == cursoSelecionado)
-            .toList();
+    var disciplinasFiltradas =
+        cursoSelecionado == null
+            ? []
+            : disciplinas
+                .where((disciplina) => disciplina.cursoId == cursoSelecionado)
+                .toList();
 
     for (var disciplina in disciplinasFiltradas) {
       agrupamento.putIfAbsent(disciplina.periodo, () => []).add(disciplina);
@@ -42,30 +45,10 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
     return agrupamento;
   }
 
-  Widget _buildCard(Disciplina d) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            d.nome,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 6),
-          Text("Carga Horária: ${d.cargaHoraria}h"),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Matriz Curricular"),
-      ),
+      appBar: AppBar(title: const Text("Matriz Curricular")),
       body: FutureBuilder<List<Curso>>(
         future: cursosFuture,
         builder: (context, snapshotCursos) {
@@ -81,7 +64,8 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
           return FutureBuilder<List<Disciplina>>(
             future: disciplinasFuture,
             builder: (context, snapshotDisciplinas) {
-              if (snapshotDisciplinas.connectionState == ConnectionState.waiting) {
+              if (snapshotDisciplinas.connectionState ==
+                  ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshotDisciplinas.hasError) {
@@ -89,33 +73,27 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
               }
 
               final disciplinas = snapshotDisciplinas.data!;
-              final disciplinasPorPeriodo = _agruparDisciplinasPorPeriodo(disciplinas);
+              final disciplinasPorPeriodo = _agruparDisciplinasPorPeriodo(
+                disciplinas,
+              );
 
-              final subtitle = cursoSelecionado == null
-                  ? "Selecione um curso"
-                  : cursos.firstWhere((c) => c.id == cursoSelecionado).nome;
+              final subtitle =
+                  cursoSelecionado == null
+                      ? "Selecione um curso"
+                      : cursos.firstWhere((c) => c.id == cursoSelecionado).nome;
 
               return Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: DropdownButtonFormField<String>(
-                      value: cursoSelecionado,
-                      items: cursos.map((curso) {
-                        return DropdownMenuItem(
-                          value: curso.id,
-                          child: Text(curso.nome),
-                        );
-                      }).toList(),
+                    child: CursoDropdownWidget(
+                      cursos: cursos,
+                      cursoSelecionado: cursoSelecionado,
                       onChanged: (novo) {
                         setState(() {
                           cursoSelecionado = novo;
                         });
                       },
-                      decoration: const InputDecoration(
-                        labelText: "Curso",
-                        border: OutlineInputBorder(),
-                      ),
                     ),
                   ),
                   Text(subtitle),
@@ -123,16 +101,8 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
 
                   if (cursoSelecionado != null)
                     Expanded(
-                      child: ListView(
-                        children: disciplinasPorPeriodo.keys.map<Widget>((periodo) {
-                          var disciplinasDoPeriodo = disciplinasPorPeriodo[periodo]!;
-                          return ExpansionTile(
-                            title: Text("Período $periodo"),
-                            children: disciplinasDoPeriodo
-                                .map<Widget>((d) => _buildCard(d))
-                                .toList(),
-                          );
-                        }).toList(),
+                      child: GradeCurricularWidget(
+                        disciplinasPorPeriodo: disciplinasPorPeriodo,
                       ),
                     ),
                   if (cursoSelecionado == null)

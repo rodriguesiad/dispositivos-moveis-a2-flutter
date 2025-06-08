@@ -1,8 +1,12 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
 import 'package:painel_do_aluno/models/matricula.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
+import 'package:painel_do_aluno/service/helpers/boletim_helper.dart';
+import 'package:painel_do_aluno/widgets/boletim_card.dart';
+import 'package:painel_do_aluno/widgets/curso_dropdown_widget.dart';
 
 class BoletimPage extends StatefulWidget {
   const BoletimPage({super.key});
@@ -15,6 +19,7 @@ class _BoletimPageState extends State<BoletimPage> {
   late Future<List<Curso>> cursosFuture;
   late Future<List<Disciplina>> disciplinasFuture;
   late Future<List<Matricula>> matriculasFuture;
+
   String? cursoSelecionado;
   final DataService dataService = DataService();
 
@@ -78,65 +83,48 @@ class _BoletimPageState extends State<BoletimPage> {
 
                   final matriculas = snapshotMatriculas.data;
 
-                  // Filtra as disciplinas com base no curso selecionado e semestre atual
                   final disciplinasFiltradas =
                       cursoSelecionado == null
                           ? []
-                          : disciplinas!.where((disciplina) {
-                            final matriculaExiste = matriculas!.any(
-                              (matricula) =>
-                                  matricula.disciplinaId == disciplina.id &&
-                                  matricula.semestreAtual,
-                            );
-                            return matriculaExiste &&
-                                disciplina.cursoId == cursoSelecionado;
-                          }).toList();
-
-                  // Definindo o título e o subtítulo
-                  /**final subtitle = cursoSelecionado == null
-                      ? ""
-                      : cursos!.firstWhere((c) => c.id == cursoSelecionado).nome;**/
+                          : filtrarDisciplinasDoCursoAtivo(
+                            cursoSelecionado!,
+                            disciplinas!,
+                            matriculas!,
+                          );
 
                   return Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(16),
-                        child: DropdownButtonFormField<String>(
-                          value: cursoSelecionado,
-                          items:
-                              cursos!.map((curso) {
-                                return DropdownMenuItem(
-                                  value: curso.id,
-                                  child: Text(curso.nome),
-                                );
-                              }).toList(),
+                        child: CursoDropdownWidget(
+                          cursos: cursos!,
+                          cursoSelecionado: cursoSelecionado,
                           onChanged: (novo) {
                             setState(() {
                               cursoSelecionado = novo;
                             });
                           },
-                          decoration: const InputDecoration(
-                            labelText: "Curso",
-                            border: OutlineInputBorder(),
-                          ),
                         ),
                       ),
 
-                      // Verifica se o curso foi selecionado antes de exibir as disciplinas
                       if (cursoSelecionado != null)
                         Expanded(
                           child: ListView(
                             children:
-                                disciplinasFiltradas
-                                    .map<Widget>(
-                                      (disciplina) =>
-                                          _buildCard(disciplina, matriculas),
-                                    )
-                                    .toList(),
+                                disciplinasFiltradas.map((disciplina) {
+                                  final matricula = matriculas!
+                                      .firstWhereOrNull(
+                                        (m) =>
+                                            m.disciplinaId == disciplina.id &&
+                                            m.semestreAtual,
+                                      );
+                                  return BoletimCard(
+                                    disciplina: disciplina,
+                                    matricula: matricula,
+                                  );
+                                }).toList(),
                           ),
                         ),
-
-                      // Caso não tenha um curso selecionado, exibe uma mensagem
                       if (cursoSelecionado == null)
                         const Expanded(
                           child: Center(
@@ -158,80 +146,6 @@ class _BoletimPageState extends State<BoletimPage> {
           );
         },
       ),
-    );
-  }
-
-  Widget _buildCard(Disciplina d, List<Matricula>? matriculas) {
-    final matricula = matriculas!.firstWhere(
-      (m) => m.disciplinaId == d.id && m.semestreAtual,
-      orElse:
-          () => Matricula(
-            id: '',
-            disciplinaId: '',
-            alunoId: '',
-            faltas: 0,
-            a1: null,
-            a2: null,
-            exameFinal: null,
-            mediaSemestral: null,
-            mediaFinal: null,
-            situacao: 'NÃO MATRICULADO',
-            semestreAtual: false,
-          ),
-    );
-
-    return Column(
-      children: [
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                d.nome,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text("Faltas: ${matricula.faltas}"),
-              Text(
-                "A1: ${matricula.a1 != null ? matricula.a1!.toStringAsFixed(1) : '-'}",
-              ),
-              Text(
-                "A2: ${matricula.a2 != null ? matricula.a2!.toStringAsFixed(1) : '-'}",
-              ),
-              Text(
-                "Exame Final: ${matricula.exameFinal != null ? matricula.exameFinal!.toStringAsFixed(1) : '-'}",
-              ),
-              Text(
-                "Média Final: ${matricula.mediaSemestral != null ? matricula.mediaSemestral!.toStringAsFixed(1) : '-'}",
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Text("Situação: "),
-                  Text(
-                    matricula.situacao,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color:
-                          matricula.situacao == 'APROVADO'
-                              ? Colors.green
-                              : matricula.situacao == 'REPROVADO'
-                              ? Colors.red
-                              : Colors.orange,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const Divider(height: 1, thickness: 1),
-      ],
     );
   }
 }
