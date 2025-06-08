@@ -9,14 +9,33 @@ class AlunoInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Nome: ${aluno.nome}',
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        TextFormField(
+          initialValue: aluno.nome,
+          readOnly: true,
+          decoration: const InputDecoration(
+            labelText: 'Nome',
+            border: OutlineInputBorder(),
+          ),
         ),
-        Text('Número de Matrícula: ${aluno.numeroMatricula}', style: const TextStyle(fontSize: 16)),
-        Text('E-mail: ${aluno.email}', style: const TextStyle(fontSize: 16)),
+        const SizedBox(height: 12),
+        TextFormField(
+          initialValue: aluno.numeroMatricula,
+          readOnly: true,
+          decoration: const InputDecoration(
+            labelText: 'Número de Matrícula',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextFormField(
+          initialValue: aluno.email,
+          readOnly: true,
+          decoration: const InputDecoration(
+            labelText: 'E-mail',
+            border: OutlineInputBorder(),
+          ),
+        ),
       ],
     );
   }

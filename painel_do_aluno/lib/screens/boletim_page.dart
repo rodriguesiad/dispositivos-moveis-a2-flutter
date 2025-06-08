@@ -11,7 +11,7 @@ import 'package:painel_do_aluno/widgets/curso_dropdown_widget.dart';
 import 'package:painel_do_aluno/widgets/portal_app_header.dart';
 
 class BoletimPage extends StatefulWidget {
-    final Aluno aluno;
+  final Aluno aluno;
   const BoletimPage({super.key, required this.aluno});
 
   @override

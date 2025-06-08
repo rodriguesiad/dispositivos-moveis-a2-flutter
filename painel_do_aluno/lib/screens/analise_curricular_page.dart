@@ -42,24 +42,28 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
     List<Matricula> matriculas,
   ) {
     setState(() {
-      disciplinasConcluidas = matriculas
-          .where(
-            (matricula) =>
-                matricula.situacao == 'APROVADO' &&
-                disciplinasDoCurso.any(
+      disciplinasConcluidas =
+          matriculas
+              .where(
+                (matricula) =>
+                    matricula.situacao == 'APROVADO' &&
+                    disciplinasDoCurso.any(
+                      (disciplina) => disciplina.id == matricula.disciplinaId,
+                    ),
+              )
+              .map(
+                (matricula) => disciplinasDoCurso.firstWhere(
                   (disciplina) => disciplina.id == matricula.disciplinaId,
                 ),
-          )
-          .map(
-            (matricula) => disciplinasDoCurso.firstWhere(
-              (disciplina) => disciplina.id == matricula.disciplinaId,
-            ),
-          )
-          .toList();
+              )
+              .toList();
 
-      disciplinasPendentes = disciplinasDoCurso
-          .where((disciplina) => !disciplinasConcluidas.contains(disciplina))
-          .toList();
+      disciplinasPendentes =
+          disciplinasDoCurso
+              .where(
+                (disciplina) => !disciplinasConcluidas.contains(disciplina),
+              )
+              .toList();
 
       progressoCurso =
           (disciplinasConcluidas.length / disciplinasDoCurso.length) * 100;
@@ -110,9 +114,7 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshotCursos.hasError) {
-                  return Center(
-                    child: Text('Erro ao carregar cursos'),
-                  );
+                  return Center(child: Text('Erro ao carregar cursos'));
                 }
 
                 final cursos = snapshotCursos.data!;
@@ -137,7 +139,9 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
                       builder: (context, snapshotMatriculas) {
                         if (snapshotMatriculas.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
                         if (snapshotMatriculas.hasError) {
                           return Center(
@@ -146,11 +150,12 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
                         }
 
                         final matriculas = snapshotMatriculas.data!;
-                        final disciplinasDoCurso = cursoSelecionado == null
-                            ? <Disciplina>[]
-                            : disciplinas
-                                .where((d) => d.cursoId == cursoSelecionado)
-                                .toList();
+                        final disciplinasDoCurso =
+                            cursoSelecionado == null
+                                ? <Disciplina>[]
+                                : disciplinas
+                                    .where((d) => d.cursoId == cursoSelecionado)
+                                    .toList();
 
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           if (mounted) {

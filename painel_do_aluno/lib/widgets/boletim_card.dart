@@ -14,7 +14,8 @@ class BoletimCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final m = matricula ??
+    final m =
+        matricula ??
         Matricula(
           id: '',
           disciplinaId: '',
@@ -48,8 +49,12 @@ class BoletimCard extends StatelessWidget {
               Text("Faltas: ${m.faltas}"),
               Text("A1: ${m.a1 != null ? m.a1!.toStringAsFixed(1) : '-'}"),
               Text("A2: ${m.a2 != null ? m.a2!.toStringAsFixed(1) : '-'}"),
-              Text("Exame Final: ${m.exameFinal != null ? m.exameFinal!.toStringAsFixed(1) : '-'}"),
-              Text("Média Final: ${m.mediaSemestral != null ? m.mediaSemestral!.toStringAsFixed(1) : '-'}"),
+              Text(
+                "Exame Final: ${m.exameFinal != null ? m.exameFinal!.toStringAsFixed(1) : '-'}",
+              ),
+              Text(
+                "Média Final: ${m.mediaSemestral != null ? m.mediaSemestral!.toStringAsFixed(1) : '-'}",
+              ),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -58,9 +63,10 @@ class BoletimCard extends StatelessWidget {
                     m.situacao,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: m.situacao == 'APROVADO'
-                          ? Colors.green
-                          : m.situacao == 'REPROVADO'
+                      color:
+                          m.situacao == 'APROVADO'
+                              ? Colors.green
+                              : m.situacao == 'REPROVADO'
                               ? Colors.red
                               : Colors.orange,
                     ),

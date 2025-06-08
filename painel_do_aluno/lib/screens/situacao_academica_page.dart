@@ -13,23 +13,37 @@ class SituacaoAcademicaPage extends StatefulWidget {
 }
 
 class _SituacaoAcademicaPageState extends State<SituacaoAcademicaPage> {
-  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _snackBarController;
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
+  _snackBarController;
+
+  late final List<Map<String, dynamic>> documentos;
 
   @override
   void initState() {
     super.initState();
 
-    final documentos = [
-      {'nome': 'Carteira de Identidade/RG', 'status': widget.aluno.simIdentidade},
-      {'nome': 'Certidão de Nascimento/Casamento', 'status': widget.aluno.simCertNascimento},
-      {'nome': 'Histórico Escolar - Ensino Médio', 'status': widget.aluno.simHistoricoEscolar},
+    documentos = [
+      {
+        'nome': 'Carteira de Identidade/RG',
+        'status': widget.aluno.simIdentidade,
+      },
+      {
+        'nome': 'Certidão de Nascimento/Casamento',
+        'status': widget.aluno.simCertNascimento,
+      },
+      {
+        'nome': 'Histórico Escolar - Ensino Médio',
+        'status': widget.aluno.simHistoricoEscolar,
+      },
       {'nome': 'CPF (CIC)', 'status': true},
-      {'nome': 'Diploma/Certificado Registrado', 'status': widget.aluno.simDiploma},
+      {
+        'nome': 'Diploma/Certificado Registrado',
+        'status': widget.aluno.simDiploma,
+      },
       {'nome': 'Comprovante de Vacina', 'status': widget.aluno.simCompVacina},
     ];
 
-    final hasPendencia = documentos.any((doc) => !(doc['status'] as bool));
+    final hasPendencia = documentos.any((d) => !(d['status'] as bool));
 
     if (hasPendencia) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -39,7 +53,7 @@ class _SituacaoAcademicaPageState extends State<SituacaoAcademicaPage> {
               'Pendência(s)! Você possui pendência de documento(s), favor procurar a secretaria.',
             ),
             backgroundColor: Colors.red,
-            duration: Duration(days: 1), // Visível enquanto estiver na tela
+            duration: Duration(days: 1),
           ),
         );
       });
@@ -48,22 +62,13 @@ class _SituacaoAcademicaPageState extends State<SituacaoAcademicaPage> {
 
   @override
   void dispose() {
-    _snackBarController?.close(); // Garante que o snackbar seja fechado ao sair da tela
+    _snackBarController?.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final aluno = widget.aluno;
-
-    final documentos = [
-      {'nome': 'Carteira de Identidade/RG', 'status': aluno.simIdentidade},
-      {'nome': 'Certidão de Nascimento/Casamento', 'status': aluno.simCertNascimento},
-      {'nome': 'Histórico Escolar - Ensino Médio', 'status': aluno.simHistoricoEscolar},
-      {'nome': 'CPF (CIC)', 'status': true},
-      {'nome': 'Diploma/Certificado Registrado', 'status': aluno.simDiploma},
-      {'nome': 'Comprovante de Vacina', 'status': aluno.simCompVacina},
-    ];
 
     return Scaffold(
       body: Column(
@@ -103,18 +108,24 @@ class _SituacaoAcademicaPageState extends State<SituacaoAcademicaPage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AlunoInfoWidget(aluno: aluno),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Documentos:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  ListaDocumentosWidget(documentos: documentos),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AlunoInfoWidget(aluno: aluno),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Documentos:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.indigo[900],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ListaDocumentosWidget(documentos: documentos),
+                  ],
+                ),
               ),
             ),
           ),

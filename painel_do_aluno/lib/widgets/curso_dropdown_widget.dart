@@ -17,12 +17,10 @@ class CursoDropdownWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
       value: cursoSelecionado,
-      items: cursos.map((curso) {
-        return DropdownMenuItem(
-          value: curso.id,
-          child: Text(curso.nome),
-        );
-      }).toList(),
+      items:
+          cursos.map((curso) {
+            return DropdownMenuItem(value: curso.id, child: Text(curso.nome));
+          }).toList(),
       onChanged: onChanged,
       decoration: const InputDecoration(
         labelText: "Selecione um curso",

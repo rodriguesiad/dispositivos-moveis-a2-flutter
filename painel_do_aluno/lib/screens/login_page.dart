@@ -45,7 +45,6 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Stack(
         children: [
-          
           Positioned.fill(
             child: Image.asset(
               '../assets/imagens/bg-login-web.jpg',

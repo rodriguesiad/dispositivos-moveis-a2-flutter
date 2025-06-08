@@ -9,12 +9,13 @@ class ListaDocumentosWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: documentos.map((doc) {
-        return StatusDocumentoTile(
-          nome: doc['nome'],
-          status: doc['status'],
-        );
-      }).toList(),
+      children:
+          documentos.expand((doc) {
+            return [
+              StatusDocumentoTile(nome: doc['nome'], status: doc['status']),
+              const Divider(height: 1, thickness: 1),
+            ];
+          }).toList(),
     );
   }
 }
