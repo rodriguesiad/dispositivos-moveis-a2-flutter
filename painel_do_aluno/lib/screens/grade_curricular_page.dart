@@ -11,34 +11,32 @@ class GradeCurricularPage extends StatefulWidget {
 }
 
 class _GradeCurricularPageState extends State<GradeCurricularPage> {
-  late List<Curso> cursos;
-  late List<Disciplina> disciplinas;
+  late Future<List<Curso>> cursosFuture;
+  late Future<List<Disciplina>> disciplinasFuture;
+
   String? cursoSelecionado;
   final DataService dataService = DataService();
 
   @override
   void initState() {
     super.initState();
-    cursos = dataService.carregarCursos();
-    disciplinas = dataService.carregarDisciplinas();
+    cursosFuture = dataService.carregarCursos();
+    disciplinasFuture = dataService.carregarDisciplinas();
   }
 
-  // Função para agrupar disciplinas por período, filtrando pelo curso selecionado
-  Map<String, List<Disciplina>> _agruparDisciplinasPorPeriodo() {
+  // Agrupamento por período com base nas disciplinas do curso
+  Map<String, List<Disciplina>> _agruparDisciplinasPorPeriodo(
+      List<Disciplina> disciplinas) {
     Map<String, List<Disciplina>> agrupamento = {};
 
-    // Filtra as disciplinas para o curso selecionado
     var disciplinasFiltradas = cursoSelecionado == null
         ? []
-        : disciplinas.where((disciplina) => disciplina.cursoId == cursoSelecionado).toList();
+        : disciplinas
+            .where((disciplina) => disciplina.cursoId == cursoSelecionado)
+            .toList();
 
     for (var disciplina in disciplinasFiltradas) {
-      // Se o período já existe, adiciona a disciplina, senão cria a lista
-      if (agrupamento.containsKey(disciplina.periodo)) {
-        agrupamento[disciplina.periodo]?.add(disciplina);
-      } else {
-        agrupamento[disciplina.periodo] = [disciplina];
-      }
+      agrupamento.putIfAbsent(disciplina.periodo, () => []).add(disciplina);
     }
 
     return agrupamento;
@@ -53,10 +51,7 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
         children: [
           Text(
             d.nome,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 6),
           Text("Carga Horária: ${d.cargaHoraria}h"),
@@ -67,83 +62,94 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Agrupa as disciplinas por período
-    final disciplinasPorPeriodo = _agruparDisciplinasPorPeriodo();
-
-    // Calculando o subtítulo com base no curso selecionado
-    final subtitle = cursoSelecionado == null
-        ? "Selecione um curso"
-        : cursos.firstWhere((c) => c.id == cursoSelecionado).nome;
-
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("Matriz Curricular", style: TextStyle(fontSize: 20)),
-            const SizedBox(height: 2),
-            // Exibe o subtítulo de forma dinâmica
-            Text(
-              subtitle,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color.fromARGB(179, 65, 65, 65),
-              ),
-            ),
-          ],
-        ),
+        title: const Text("Matriz Curricular"),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: DropdownButtonFormField<String>(
-              value: cursoSelecionado,
-              items: cursos.map((curso) {
-                return DropdownMenuItem(
-                  value: curso.id,
-                  child: Text(curso.nome),
-                );
-              }).toList(),
-              onChanged: (novo) {
-                setState(() {
-                  cursoSelecionado = novo;
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: "Curso",
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
+      body: FutureBuilder<List<Curso>>(
+        future: cursosFuture,
+        builder: (context, snapshotCursos) {
+          if (snapshotCursos.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshotCursos.hasError) {
+            return Center(child: Text('Erro ao carregar cursos'));
+          }
 
-          // Verifica se o curso foi selecionado antes de exibir as disciplinas
-          if (cursoSelecionado != null)
-            Expanded(
-              child: ListView(
-                children: disciplinasPorPeriodo.keys.map<Widget>((periodo) {
-                  // Para cada período, cria uma seção com o título do período e as disciplinas associadas a ele
-                  var disciplinasDoPeriodo = disciplinasPorPeriodo[periodo]!;
-                  return ExpansionTile(
-                    title: Text("Período $periodo"),
-                    children: disciplinasDoPeriodo.map<Widget>((disciplina) => _buildCard(disciplina)).toList(),
-                  );
-                }).toList(),
-              ),
-            ),
+          final cursos = snapshotCursos.data!;
 
-          // Caso não tenha um curso selecionado, exibe uma mensagem
-          if (cursoSelecionado == null)
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'Por favor, selecione um curso acima para visualizar a matriz curricular.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ),
-            ),
-        ],
+          return FutureBuilder<List<Disciplina>>(
+            future: disciplinasFuture,
+            builder: (context, snapshotDisciplinas) {
+              if (snapshotDisciplinas.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshotDisciplinas.hasError) {
+                return Center(child: Text('Erro ao carregar disciplinas'));
+              }
+
+              final disciplinas = snapshotDisciplinas.data!;
+              final disciplinasPorPeriodo = _agruparDisciplinasPorPeriodo(disciplinas);
+
+              final subtitle = cursoSelecionado == null
+                  ? "Selecione um curso"
+                  : cursos.firstWhere((c) => c.id == cursoSelecionado).nome;
+
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: DropdownButtonFormField<String>(
+                      value: cursoSelecionado,
+                      items: cursos.map((curso) {
+                        return DropdownMenuItem(
+                          value: curso.id,
+                          child: Text(curso.nome),
+                        );
+                      }).toList(),
+                      onChanged: (novo) {
+                        setState(() {
+                          cursoSelecionado = novo;
+                        });
+                      },
+                      decoration: const InputDecoration(
+                        labelText: "Curso",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                  Text(subtitle),
+                  const SizedBox(height: 10),
+
+                  if (cursoSelecionado != null)
+                    Expanded(
+                      child: ListView(
+                        children: disciplinasPorPeriodo.keys.map<Widget>((periodo) {
+                          var disciplinasDoPeriodo = disciplinasPorPeriodo[periodo]!;
+                          return ExpansionTile(
+                            title: Text("Período $periodo"),
+                            children: disciplinasDoPeriodo
+                                .map<Widget>((d) => _buildCard(d))
+                                .toList(),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  if (cursoSelecionado == null)
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'Por favor, selecione um curso acima para visualizar a matriz curricular.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }

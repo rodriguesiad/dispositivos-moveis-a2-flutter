@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
-import 'package:painel_do_aluno/models/matricula_disciplina.dart';
+import 'package:painel_do_aluno/models/matricula.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
 
 class RematriculaPage extends StatefulWidget {
@@ -12,65 +12,70 @@ class RematriculaPage extends StatefulWidget {
 }
 
 class _RematriculaPageState extends State<RematriculaPage> {
-  late List<Curso> cursos;
-  late List<Disciplina> disciplinas;
-  late List<MatriculaDisciplina> matriculas;
+  late Future<List<Curso>> cursosFuture;
+  late Future<List<Disciplina>> disciplinasFuture;
+  late Future<List<Matricula>> matriculasFuture;
+
   String? cursoSelecionado;
-  List<Disciplina> disciplinasDisponiveis = [];
-  final DataService dataService = DataService();
   List<Disciplina> disciplinasSelecionadas = [];
+
+  final DataService dataService = DataService();
 
   @override
   void initState() {
     super.initState();
-    cursos = dataService.carregarCursos();
-    disciplinas = dataService.carregarDisciplinas();
-    matriculas = dataService.carregarMatriculas(); // Carrega as matrículas
+    cursosFuture = dataService.carregarCursos();
+    disciplinasFuture = dataService.carregarDisciplinas();
+    matriculasFuture = dataService.carregarMatriculas();
   }
 
-  // Função para filtrar disciplinas disponíveis para matrícula
-  void _filtrarDisciplinas() {
-    if (cursoSelecionado == null) return;
+  List<Disciplina> _filtrarDisciplinas({
+    required String cursoId,
+    required List<Disciplina> disciplinas,
+    required List<Matricula> matriculas,
+  }) {
+    return disciplinas.where((disciplina) {
+      if (disciplina.cursoId != cursoId) return false;
 
-    setState(() {
-      // Filtra as disciplinas do curso selecionado
-      disciplinasDisponiveis =
-          disciplinas.where((disciplina) {
-            // Verifica se a disciplina pertence ao curso selecionado
-            if (disciplina.cursoId != cursoSelecionado) return false;
+      final matriculaSemestreAtual = matriculas.any(
+        (matricula) =>
+            matricula.disciplinaId == disciplina.id && matricula.semestreAtual,
+      );
 
-            // Verifica se o aluno está matriculado no semestre atual ou aprovado em semestres passados
-            final matriculaSemestreAtual = matriculas.any(
-              (matricula) =>
-                  matricula.disciplinaId == disciplina.id &&
-                  matricula.semestreAtual,
-            );
+      final matriculaAprovadaAnterior = matriculas.any(
+        (matricula) =>
+            matricula.disciplinaId == disciplina.id &&
+            !matricula.semestreAtual &&
+            matricula.situacao == 'APROVADO',
+      );
 
-            final matriculaAprovadaEmSemestreAnterior = matriculas.any(
-              (matricula) =>
-                  matricula.disciplinaId == disciplina.id &&
-                  !matricula.semestreAtual && // semestre anterior
-                  matricula.situacao == 'APROVADO', // aprovado
-            );
+      return !matriculaSemestreAtual && !matriculaAprovadaAnterior;
+    }).toList();
+  }
 
-            // Exibe disciplinas que o aluno ainda não está matriculado no semestre atual
-            // ou que o aluno já foi aprovado em semestres passados
-            return !matriculaSemestreAtual &&
-                !matriculaAprovadaEmSemestreAnterior;
-          }).toList();
+  void _confirmarMatricula() {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Matrícula confirmada!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/');
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Filtra as disciplinas sempre que o curso for alterado
-    _filtrarDisciplinas();
-
     return Scaffold(
       appBar: AppBar(
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text("Rematrícula", style: TextStyle(fontSize: 20)),
             SizedBox(height: 2),
             Text(
@@ -83,89 +88,146 @@ class _RematriculaPageState extends State<RematriculaPage> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Dropdown para selecionar o curso
-            DropdownButtonFormField<String>(
-              value: cursoSelecionado,
-              items:
-                  cursos.map((curso) {
-                    return DropdownMenuItem(
-                      value: curso.id,
-                      child: Text(curso.nome),
-                    );
-                  }).toList(),
-              onChanged: (novo) {
-                setState(() {
-                  cursoSelecionado = novo;
-                });
-              },
-              decoration: const InputDecoration(
-                labelText: "Curso",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 20),
+      body: FutureBuilder<List<Curso>>(
+        future: cursosFuture,
+        builder: (context, snapshotCursos) {
+          if (snapshotCursos.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshotCursos.hasError) {
+            return Center(child: Text('Erro ao carregar cursos'));
+          }
+          final cursos = snapshotCursos.data!;
 
-            // Exibe as disciplinas disponíveis para matrícula
-            Expanded(
-              child: ListView(
-                children:
-                    disciplinasDisponiveis.map<Widget>((disciplina) {
-                      return CheckboxListTile(
-                        title: Text(disciplina.nome),
-                        subtitle: Text(
-                          "Carga Horária: ${disciplina.cargaHoraria}h",
+          return FutureBuilder<List<Disciplina>>(
+            future: disciplinasFuture,
+            builder: (context, snapshotDisciplinas) {
+              if (snapshotDisciplinas.connectionState ==
+                  ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshotDisciplinas.hasError) {
+                return Center(child: Text('Erro ao carregar disciplinas'));
+              }
+              final disciplinas = snapshotDisciplinas.data!;
+
+              return FutureBuilder<List<Matricula>>(
+                future: matriculasFuture,
+                builder: (context, snapshotMatriculas) {
+                  if (snapshotMatriculas.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshotMatriculas.hasError) {
+                    return Center(child: Text('Erro ao carregar matrículas'));
+                  }
+                  final matriculas = snapshotMatriculas.data!;
+
+                  final disciplinasDisponiveis =
+                      cursoSelecionado == null
+                          ? <Disciplina>[]
+                          : _filtrarDisciplinas(
+                            cursoId: cursoSelecionado!,
+                            disciplinas: disciplinas,
+                            matriculas: matriculas,
+                          );
+
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        DropdownButtonFormField<String>(
+                          value: cursoSelecionado,
+                          items:
+                              cursos.map((curso) {
+                                return DropdownMenuItem(
+                                  value: curso.id,
+                                  child: Text(curso.nome),
+                                );
+                              }).toList(),
+                          onChanged: (novo) {
+                            setState(() {
+                              cursoSelecionado = novo;
+                              disciplinasSelecionadas.clear(); // reseta seleção
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            labelText: "Curso",
+                            border: OutlineInputBorder(),
+                          ),
                         ),
-                        value: disciplinasSelecionadas.contains(disciplina),
-                        onChanged: (bool? value) {
-                          setState(() {
-                            if (value == true) {
-                              disciplinasSelecionadas.add(disciplina);
+                        const SizedBox(height: 20),
+
+                        if (cursoSelecionado != null)
+                          Expanded(
+                            child: ListView(
+                              children:
+                                  disciplinasDisponiveis.map((disciplina) {
+                                    return CheckboxListTile(
+                                      title: Text(disciplina.nome),
+                                      subtitle: Text(
+                                        "Carga Horária: ${disciplina.cargaHoraria}h",
+                                      ),
+                                      value: disciplinasSelecionadas.contains(
+                                        disciplina,
+                                      ),
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          if (value == true) {
+                                            disciplinasSelecionadas.add(
+                                              disciplina,
+                                            );
+                                          } else {
+                                            disciplinasSelecionadas.remove(
+                                              disciplina,
+                                            );
+                                          }
+                                        });
+                                      },
+                                    );
+                                  }).toList(),
+                            ),
+                          ),
+
+                        if (cursoSelecionado == null)
+                          const Expanded(
+                            child: Center(
+                              child: Text(
+                                'Selecione um curso para ver as disciplinas disponíveis.',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+
+                        ElevatedButton(
+                          onPressed: () {
+                            if (disciplinasSelecionadas.isNotEmpty) {
+                              _confirmarMatricula();
                             } else {
-                              disciplinasSelecionadas.remove(disciplina);
+                              if (!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Selecione ao menos uma disciplina.',
+                                  ),
+                                ),
+                              );
                             }
-                          });
-                        },
-                      );
-                    }).toList(),
-              ),
-            ),
-
-            // Botão para confirmar matrícula
-            ElevatedButton(
-              onPressed: () {
-                // Lógica para confirmar a matrícula nas disciplinas selecionadas
-                if (disciplinasSelecionadas.isNotEmpty) {
-                  // Adicionar lógica para confirmar a matrícula nas disciplinas
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Matrícula confirmada!'),
-                      backgroundColor: Colors.green, // Fundo verde
+                          },
+                          child: const Text("Confirmar Matrícula"),
+                        ),
+                      ],
                     ),
                   );
-
-                  // Redireciona para a tela principal (ex: Dashboard)
-                  Future.delayed(const Duration(seconds: 2), () {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      '/',
-                    ); // Redirecionando para a tela principal
-                  });
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Selecione ao menos uma disciplina.'),
-                    ),
-                  );
-                }
-              },
-              child: const Text("Confirmar Matrícula"),
-            ),
-          ],
-        ),
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }

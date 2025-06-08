@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/screens/portal_aluno_page.dart';
-import 'package:painel_do_aluno/screens/rematricula_page.dart'; // Assumindo que RematrículaPage seja sua tela de rematrícula
-
+import 'package:painel_do_aluno/screens/rematricula_page.dart'; 
 void main() {
   runApp(PortalAlunoApp());
 }
@@ -14,12 +13,12 @@ class PortalAlunoApp extends StatelessWidget {
     return MaterialApp(
       title: 'Portal do Aluno',
       theme: ThemeData(primarySwatch: Colors.deepPurple),
-      initialRoute: '/', // A tela inicial
+      initialRoute: '/', 
       routes: {
         '/':
-            (context) => const PortaldoAlunoPage(), // Tela inicial (seu portal)
+            (context) => const PortaldoAlunoPage(), 
         '/rematricula':
-            (context) => const RematriculaPage(), // A tela de rematrícula
+            (context) => const RematriculaPage(),
       },
     );
   }

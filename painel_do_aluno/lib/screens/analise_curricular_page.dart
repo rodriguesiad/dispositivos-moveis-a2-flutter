@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
-import 'package:painel_do_aluno/models/matricula_disciplina.dart';
+import 'package:painel_do_aluno/models/matricula.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
 
 class AnaliseCurricularPage extends StatefulWidget {
@@ -14,7 +14,7 @@ class AnaliseCurricularPage extends StatefulWidget {
 class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
   late Future<List<Curso>> cursosFuture;
   late Future<List<Disciplina>> disciplinasFuture;
-  late Future<List<MatriculaDisciplina>> matriculasFuture;
+  late Future<List<Matricula>> matriculasFuture;
   String? cursoSelecionado;
   double progressoCurso = 0.0;
   List<Disciplina> disciplinasConcluidas = [];
@@ -31,37 +31,45 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
   }
 
   // Função para calcular progresso do curso
-  void _calcularProgresso(List<Disciplina> disciplinasDoCurso, List<MatriculaDisciplina> matriculas) {
+  void _calcularProgresso(
+    List<Disciplina> disciplinasDoCurso,
+    List<Matricula> matriculas,
+  ) {
     setState(() {
       // Filtra as disciplinas concluídas e pendentes
-      disciplinasConcluidas = matriculas
-          .where((matricula) =>
-              matricula.situacao == 'APROVADO' &&
-              disciplinasDoCurso.any((disciplina) =>
-                  disciplina.id == matricula.disciplinaId))
-          .map((matricula) =>
-              disciplinasDoCurso.firstWhere((disciplina) =>
-                  disciplina.id == matricula.disciplinaId))
-          .toList();
+      disciplinasConcluidas =
+          matriculas
+              .where(
+                (matricula) =>
+                    matricula.situacao == 'APROVADO' &&
+                    disciplinasDoCurso.any(
+                      (disciplina) => disciplina.id == matricula.disciplinaId,
+                    ),
+              )
+              .map(
+                (matricula) => disciplinasDoCurso.firstWhere(
+                  (disciplina) => disciplina.id == matricula.disciplinaId,
+                ),
+              )
+              .toList();
 
-      disciplinasPendentes = disciplinasDoCurso
-          .where((disciplina) =>
-              !disciplinasConcluidas.contains(disciplina))
-          .toList();
+      disciplinasPendentes =
+          disciplinasDoCurso
+              .where(
+                (disciplina) => !disciplinasConcluidas.contains(disciplina),
+              )
+              .toList();
 
       // Calcula o progresso
-      progressoCurso = (disciplinasConcluidas.length /
-              disciplinasDoCurso.length) *
-          100;
+      progressoCurso =
+          (disciplinasConcluidas.length / disciplinasDoCurso.length) * 100;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Análise Curricular"),
-      ),
+      appBar: AppBar(title: const Text("Análise Curricular")),
       body: FutureBuilder<List<Curso>>(
         future: cursosFuture,
         builder: (context, snapshotCursos) {
@@ -69,7 +77,9 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshotCursos.hasError) {
-            return Center(child: Text('Erro ao carregar cursos: ${snapshotCursos.error}'));
+            return Center(
+              child: Text('Erro ao carregar cursos: ${snapshotCursos.error}'),
+            );
           }
 
           final cursos = snapshotCursos.data;
@@ -77,38 +87,51 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
           return FutureBuilder<List<Disciplina>>(
             future: disciplinasFuture,
             builder: (context, snapshotDisciplinas) {
-              if (snapshotDisciplinas.connectionState == ConnectionState.waiting) {
+              if (snapshotDisciplinas.connectionState ==
+                  ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshotDisciplinas.hasError) {
-                return Center(child: Text('Erro ao carregar disciplinas: ${snapshotDisciplinas.error}'));
+                return Center(
+                  child: Text(
+                    'Erro ao carregar disciplinas: ${snapshotDisciplinas.error}',
+                  ),
+                );
               }
 
               final disciplinas = snapshotDisciplinas.data;
 
-              return FutureBuilder<List<MatriculaDisciplina>>(
+              return FutureBuilder<List<Matricula>>(
                 future: matriculasFuture,
                 builder: (context, snapshotMatriculas) {
-                  if (snapshotMatriculas.connectionState == ConnectionState.waiting) {
+                  if (snapshotMatriculas.connectionState ==
+                      ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (snapshotMatriculas.hasError) {
-                    return Center(child: Text('Erro ao carregar matrículas: ${snapshotMatriculas.error}'));
+                    return Center(
+                      child: Text(
+                        'Erro ao carregar matrículas: ${snapshotMatriculas.error}',
+                      ),
+                    );
                   }
 
                   final matriculas = snapshotMatriculas.data;
 
-                  // Filtra as disciplinas do curso selecionado
-                  final disciplinasDoCurso = cursoSelecionado == null
-                      ? []
-                      : disciplinas!.where((disciplina) {
-                          return disciplina.cursoId == cursoSelecionado;
-                        }).toList();
+                  final List<Disciplina> disciplinasDoCurso =
+                      cursoSelecionado == null
+                          ? <Disciplina>[]
+                          : disciplinas!.where((disciplina) {
+                            return disciplina.cursoId == cursoSelecionado;
+                          }).toList();
 
-                  // Atualiza o progresso do curso
-                  _calcularProgresso(disciplinasDoCurso, matriculas!);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (mounted) {
+                      _calcularProgresso(disciplinasDoCurso, matriculas!);
+                    }
+                  });
 
-                  return Padding(
+                  return SingleChildScrollView(
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,12 +139,13 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
                         // Dropdown para selecionar o curso
                         DropdownButtonFormField<String>(
                           value: cursoSelecionado,
-                          items: cursos!.map((curso) {
-                            return DropdownMenuItem(
-                              value: curso.id,
-                              child: Text(curso.nome),
-                            );
-                          }).toList(),
+                          items:
+                              cursos!.map((curso) {
+                                return DropdownMenuItem(
+                                  value: curso.id,
+                                  child: Text(curso.nome),
+                                );
+                              }).toList(),
                           onChanged: (novo) {
                             setState(() {
                               cursoSelecionado = novo;
@@ -166,9 +190,11 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
                               ...disciplinasConcluidas.map((disciplina) {
                                 return ListTile(
                                   title: Text(disciplina.nome),
-                                  subtitle: Text("Carga Horária: ${disciplina.cargaHoraria}h"),
+                                  subtitle: Text(
+                                    "Carga Horária: ${disciplina.cargaHoraria}h",
+                                  ),
                                 );
-                              }).toList(),
+                              }),
                             ],
                           ),
                         const SizedBox(height: 20),
@@ -186,9 +212,11 @@ class _AnaliseCurricularPageState extends State<AnaliseCurricularPage> {
                               ...disciplinasPendentes.map((disciplina) {
                                 return ListTile(
                                   title: Text(disciplina.nome),
-                                  subtitle: Text("Carga Horária: ${disciplina.cargaHoraria}h"),
+                                  subtitle: Text(
+                                    "Carga Horária: ${disciplina.cargaHoraria}h",
+                                  ),
                                 );
-                              }).toList(),
+                              }),
                             ],
                           ),
                       ],

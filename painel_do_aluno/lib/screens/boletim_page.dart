@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
-import 'package:painel_do_aluno/models/matricula_disciplina.dart';
+import 'package:painel_do_aluno/models/matricula.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
 
 class BoletimPage extends StatefulWidget {
@@ -14,7 +14,7 @@ class BoletimPage extends StatefulWidget {
 class _BoletimPageState extends State<BoletimPage> {
   late Future<List<Curso>> cursosFuture;
   late Future<List<Disciplina>> disciplinasFuture;
-  late Future<List<MatriculaDisciplina>> matriculasFuture;
+  late Future<List<Matricula>> matriculasFuture;
   String? cursoSelecionado;
   final DataService dataService = DataService();
 
@@ -29,9 +29,7 @@ class _BoletimPageState extends State<BoletimPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Boletim Acadêmico"),
-      ),
+      appBar: AppBar(title: const Text("Boletim Acadêmico")),
       body: FutureBuilder<List<Curso>>(
         future: cursosFuture,
         builder: (context, snapshotCursos) {
@@ -39,7 +37,9 @@ class _BoletimPageState extends State<BoletimPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshotCursos.hasError) {
-            return Center(child: Text('Erro ao carregar cursos: ${snapshotCursos.error}'));
+            return Center(
+              child: Text('Erro ao carregar cursos: ${snapshotCursos.error}'),
+            );
           }
 
           final cursos = snapshotCursos.data;
@@ -47,43 +47,55 @@ class _BoletimPageState extends State<BoletimPage> {
           return FutureBuilder<List<Disciplina>>(
             future: disciplinasFuture,
             builder: (context, snapshotDisciplinas) {
-              if (snapshotDisciplinas.connectionState == ConnectionState.waiting) {
+              if (snapshotDisciplinas.connectionState ==
+                  ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshotDisciplinas.hasError) {
-                return Center(child: Text('Erro ao carregar disciplinas: ${snapshotDisciplinas.error}'));
+                return Center(
+                  child: Text(
+                    'Erro ao carregar disciplinas: ${snapshotDisciplinas.error}',
+                  ),
+                );
               }
 
               final disciplinas = snapshotDisciplinas.data;
 
-              return FutureBuilder<List<MatriculaDisciplina>>(
+              return FutureBuilder<List<Matricula>>(
                 future: matriculasFuture,
                 builder: (context, snapshotMatriculas) {
-                  if (snapshotMatriculas.connectionState == ConnectionState.waiting) {
+                  if (snapshotMatriculas.connectionState ==
+                      ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (snapshotMatriculas.hasError) {
-                    return Center(child: Text('Erro ao carregar matrículas: ${snapshotMatriculas.error}'));
+                    return Center(
+                      child: Text(
+                        'Erro ao carregar matrículas: ${snapshotMatriculas.error}',
+                      ),
+                    );
                   }
 
                   final matriculas = snapshotMatriculas.data;
 
                   // Filtra as disciplinas com base no curso selecionado e semestre atual
-                  final disciplinasFiltradas = cursoSelecionado == null
-                      ? []
-                      : disciplinas!.where((disciplina) {
-                          final matriculaExiste = matriculas!.any(
-                            (matricula) =>
-                                matricula.disciplinaId == disciplina.id &&
-                                matricula.semestreAtual,
-                          );
-                          return matriculaExiste && disciplina.cursoId == cursoSelecionado;
-                        }).toList();
+                  final disciplinasFiltradas =
+                      cursoSelecionado == null
+                          ? []
+                          : disciplinas!.where((disciplina) {
+                            final matriculaExiste = matriculas!.any(
+                              (matricula) =>
+                                  matricula.disciplinaId == disciplina.id &&
+                                  matricula.semestreAtual,
+                            );
+                            return matriculaExiste &&
+                                disciplina.cursoId == cursoSelecionado;
+                          }).toList();
 
                   // Definindo o título e o subtítulo
-                  final subtitle = cursoSelecionado == null
+                  /**final subtitle = cursoSelecionado == null
                       ? ""
-                      : cursos!.firstWhere((c) => c.id == cursoSelecionado).nome;
+                      : cursos!.firstWhere((c) => c.id == cursoSelecionado).nome;**/
 
                   return Column(
                     children: [
@@ -91,12 +103,13 @@ class _BoletimPageState extends State<BoletimPage> {
                         padding: const EdgeInsets.all(16),
                         child: DropdownButtonFormField<String>(
                           value: cursoSelecionado,
-                          items: cursos!.map((curso) {
-                            return DropdownMenuItem(
-                              value: curso.id,
-                              child: Text(curso.nome),
-                            );
-                          }).toList(),
+                          items:
+                              cursos!.map((curso) {
+                                return DropdownMenuItem(
+                                  value: curso.id,
+                                  child: Text(curso.nome),
+                                );
+                              }).toList(),
                           onChanged: (novo) {
                             setState(() {
                               cursoSelecionado = novo;
@@ -113,9 +126,13 @@ class _BoletimPageState extends State<BoletimPage> {
                       if (cursoSelecionado != null)
                         Expanded(
                           child: ListView(
-                            children: disciplinasFiltradas
-                                .map<Widget>((disciplina) => _buildCard(disciplina, matriculas))
-                                .toList(),
+                            children:
+                                disciplinasFiltradas
+                                    .map<Widget>(
+                                      (disciplina) =>
+                                          _buildCard(disciplina, matriculas),
+                                    )
+                                    .toList(),
                           ),
                         ),
 
@@ -126,7 +143,10 @@ class _BoletimPageState extends State<BoletimPage> {
                             child: Text(
                               'Por favor, selecione um curso acima para visualizar o boletim.',
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 16, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
@@ -141,23 +161,23 @@ class _BoletimPageState extends State<BoletimPage> {
     );
   }
 
-  // Função para exibir as informações detalhadas de cada disciplina
-  Widget _buildCard(Disciplina d, List<MatriculaDisciplina>? matriculas) {
-    // Encontra a matrícula da disciplina no semestre atual
+  Widget _buildCard(Disciplina d, List<Matricula>? matriculas) {
     final matricula = matriculas!.firstWhere(
       (m) => m.disciplinaId == d.id && m.semestreAtual,
-      orElse: () => MatriculaDisciplina(
-        id: '',
-        disciplinaId: '',
-        alunoId: '',
-        faltas: 0,
-        a1: 0.0,
-        a2: 0.0,
-        exameFinal: 0.0,
-        mediaSemestral: 0.0,
-        situacao: 'NÃO MATRICULADO',
-        semestreAtual: false,
-      ),
+      orElse:
+          () => Matricula(
+            id: '',
+            disciplinaId: '',
+            alunoId: '',
+            faltas: 0,
+            a1: null,
+            a2: null,
+            exameFinal: null,
+            mediaSemestral: null,
+            mediaFinal: null,
+            situacao: 'NÃO MATRICULADO',
+            semestreAtual: false,
+          ),
     );
 
     return Column(
@@ -177,12 +197,18 @@ class _BoletimPageState extends State<BoletimPage> {
               ),
               const SizedBox(height: 8),
               Text("Faltas: ${matricula.faltas}"),
-              Text("A1: ${matricula.a1.toStringAsFixed(1)}"),
-              Text("A2: ${matricula.a2.toStringAsFixed(1)}"),
               Text(
-                "Exame Final: ${matricula.exameFinal?.toStringAsFixed(1) ?? '--'}",
+                "A1: ${matricula.a1 != null ? matricula.a1!.toStringAsFixed(1) : '-'}",
               ),
-              Text("Média Final: ${matricula.mediaSemestral.toStringAsFixed(1)}"),
+              Text(
+                "A2: ${matricula.a2 != null ? matricula.a2!.toStringAsFixed(1) : '-'}",
+              ),
+              Text(
+                "Exame Final: ${matricula.exameFinal != null ? matricula.exameFinal!.toStringAsFixed(1) : '-'}",
+              ),
+              Text(
+                "Média Final: ${matricula.mediaSemestral != null ? matricula.mediaSemestral!.toStringAsFixed(1) : '-'}",
+              ),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -191,9 +217,10 @@ class _BoletimPageState extends State<BoletimPage> {
                     matricula.situacao,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: matricula.situacao == 'APROVADO'
-                          ? Colors.green
-                          : matricula.situacao == 'REPROVADO'
+                      color:
+                          matricula.situacao == 'APROVADO'
+                              ? Colors.green
+                              : matricula.situacao == 'REPROVADO'
                               ? Colors.red
                               : Colors.orange,
                     ),

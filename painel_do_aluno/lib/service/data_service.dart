@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
-import 'package:painel_do_aluno/models/matricula_disciplina.dart';
+import 'package:painel_do_aluno/models/matricula.dart';
 import 'package:painel_do_aluno/models/aluno.dart';
 
 class DataService {
@@ -12,7 +12,7 @@ class DataService {
     final response = await http.get(Uri.parse('$baseUrl/cursos'));
 
     if (response.statusCode == 200) {
-      final List<dynamic> cursosJson = json.decode(response.body);
+      final List<dynamic> cursosJson = json.decode(utf8.decode(response.bodyBytes));
       return cursosJson.map((json) => Curso.fromJson(json)).toList();
     } else {
       throw Exception('Erro ao carregar cursos');
@@ -23,19 +23,19 @@ class DataService {
     final response = await http.get(Uri.parse('$baseUrl/disciplinas'));
 
     if (response.statusCode == 200) {
-      final List<dynamic> disciplinasJson = json.decode(response.body);
+      final List<dynamic> disciplinasJson = json.decode(utf8.decode(response.bodyBytes));
       return disciplinasJson.map((json) => Disciplina.fromJson(json)).toList();
     } else {
       throw Exception('Erro ao carregar disciplinas');
     }
   }
 
-  Future<List<MatriculaDisciplina>> carregarMatriculas() async {
+  Future<List<Matricula>> carregarMatriculas() async {
     final response = await http.get(Uri.parse('$baseUrl/matriculas'));
 
     if (response.statusCode == 200) {
-      final List<dynamic> matriculasJson = json.decode(response.body);
-      return matriculasJson.map((json) => MatriculaDisciplina.fromJson(json)).toList();
+      final List<dynamic> matriculasJson = json.decode(utf8.decode(response.bodyBytes));
+      return matriculasJson.map((json) => Matricula.fromJson(json)).toList();
     } else {
       throw Exception('Erro ao carregar matriculas');
     }
@@ -45,7 +45,7 @@ class DataService {
     final response = await http.get(Uri.parse('$baseUrl/alunos/1'));
 
     if (response.statusCode == 200) {
-      final alunoJson = json.decode(response.body);
+      final alunoJson = json.decode(utf8.decode(response.bodyBytes));
       return Aluno.fromJson(alunoJson);
     } else {
       throw Exception('Erro ao carregar aluno');
