@@ -4,95 +4,51 @@ import 'package:painel_do_aluno/screens/grade_curricular_page.dart';
 import 'package:painel_do_aluno/screens/rematricula_page.dart';
 import 'package:painel_do_aluno/screens/situacao_academica_page.dart';
 import 'package:painel_do_aluno/screens/analise_curricular_page.dart';
+import 'package:painel_do_aluno/widgets/card_portal_item.dart';
+import 'package:painel_do_aluno/widgets/portal_app_header.dart';
 
-class PortaldoAlunoPage extends StatefulWidget {
+class PortaldoAlunoPage extends StatelessWidget {
   const PortaldoAlunoPage({super.key});
-
-  @override
-  State<PortaldoAlunoPage> createState() => _PortaldoAlunoPageState();
-}
-
-class _PortaldoAlunoPageState extends State<PortaldoAlunoPage> {
-  String termoBusca = '';
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Widget _buildCard(
-    BuildContext context,
-    String titulo,
-    String subtitulo,
-    Widget destino,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => destino));
-      },
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.only(bottom: 12),
-        child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
-          ),
-          title: Text(
-            titulo,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(subtitulo),
-          trailing: const Icon(Icons.arrow_forward_ios),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        centerTitle: true,
-        title: const Text(
-          "Portal do Aluno",
-          style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-        ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+      body: Column(
         children: [
-          _buildCard(
-            context,
-            "BOLETIM (SEMESTRE ATUAL)",
-            "Desempenho nas disciplinas do semestre atual",
-            const BoletimPage(),
-          ),
-          _buildCard(
-            context,
-            "GRADE CURRICULAR",
-            "Selecione um curso e veja as disciplinas distribuídas por período.",
-            const GradeCurricularPage(),
-          ),
-          _buildCard(
-            context,
-            "REMATRÍCULA ONLINE",
-            "Fazer a rematrícula nos semestres posteriores, conforme calendário acadêmico. Emissão da declaração de vínculo.",
-            const RematriculaPage(),
-          ),
-          _buildCard(
-            context,
-            "SITUAÇÃO ACADÊMICA",
-            "Veja a sua situação junto a secretaria e demais departamentos da unitins.",
-            const SituacaoAcademicaPage(),
-          ),
-          _buildCard(
-            context,
-            "ANÁLISE CURRICULAR",
-            "Análise curricular completa",
-            const AnaliseCurricularPage(),
+          PortalAppHeader(),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                CardPortalItem(
+                  titulo: "BOLETIM (SEMESTRE ATUAL)",
+                  subtitulo: "Desempenho nas disciplinas do semestre atual",
+                  destino: BoletimPage(),
+                ),
+                CardPortalItem(
+                  titulo: "GRADE CURRICULAR",
+                  subtitulo:
+                      "Selecione um curso e veja as disciplinas distribuídas por período.",
+                  destino: GradeCurricularPage(),
+                ),
+                CardPortalItem(
+                  titulo: "REMATRÍCULA ONLINE",
+                  subtitulo:
+                      "Fazer a rematrícula conforme calendário acadêmico.",
+                  destino: RematriculaPage(),
+                ),
+                CardPortalItem(
+                  titulo: "SITUAÇÃO ACADÊMICA",
+                  subtitulo: "Veja sua situação junto à secretaria.",
+                  destino: SituacaoAcademicaPage(),
+                ),
+                CardPortalItem(
+                  titulo: "ANÁLISE CURRICULAR",
+                  subtitulo: "Análise curricular completa",
+                  destino: AnaliseCurricularPage(),
+                ),
+              ],
+            ),
           ),
         ],
       ),

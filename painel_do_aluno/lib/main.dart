@@ -12,7 +12,7 @@ class PortalAlunoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Portal do Aluno',
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
+      theme: ThemeData(primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white),
       initialRoute: '/', 
       routes: {
         '/':

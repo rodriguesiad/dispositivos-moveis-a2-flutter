@@ -5,6 +5,7 @@ import 'package:painel_do_aluno/models/matricula.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
 import 'package:painel_do_aluno/widgets/curso_dropdown_widget.dart';
 import 'package:painel_do_aluno/widgets/lista_disciplinas_selecionaveis.dart';
+import 'package:painel_do_aluno/widgets/portal_app_header.dart';
 
 class RematriculaPage extends StatefulWidget {
   const RematriculaPage({super.key});
@@ -74,138 +75,173 @@ class _RematriculaPageState extends State<RematriculaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Rematrícula", style: TextStyle(fontSize: 20)),
-            SizedBox(height: 2),
-            Text(
-              "Selecione um curso para visualizar as disciplinas disponíveis.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Color.fromARGB(179, 65, 65, 65),
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: FutureBuilder<List<Curso>>(
-        future: cursosFuture,
-        builder: (context, snapshotCursos) {
-          if (snapshotCursos.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshotCursos.hasError) {
-            return Center(child: Text('Erro ao carregar cursos'));
-          }
-          final cursos = snapshotCursos.data!;
-
-          return FutureBuilder<List<Disciplina>>(
-            future: disciplinasFuture,
-            builder: (context, snapshotDisciplinas) {
-              if (snapshotDisciplinas.connectionState ==
-                  ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshotDisciplinas.hasError) {
-                return Center(child: Text('Erro ao carregar disciplinas'));
-              }
-              final disciplinas = snapshotDisciplinas.data!;
-
-              return FutureBuilder<List<Matricula>>(
-                future: matriculasFuture,
-                builder: (context, snapshotMatriculas) {
-                  if (snapshotMatriculas.connectionState ==
-                      ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshotMatriculas.hasError) {
-                    return Center(child: Text('Erro ao carregar matrículas'));
-                  }
-                  final matriculas = snapshotMatriculas.data!;
-
-                  final disciplinasDisponiveis =
-                      cursoSelecionado == null
-                          ? <Disciplina>[]
-                          : _filtrarDisciplinas(
-                            cursoId: cursoSelecionado!,
-                            disciplinas: disciplinas,
-                            matriculas: matriculas,
-                          );
-
-                  return Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        CursoDropdownWidget(
-                          cursos: cursos,
-                          cursoSelecionado: cursoSelecionado,
-                          onChanged: (novo) {
-                            setState(() {
-                              cursoSelecionado = novo;
-                              disciplinasSelecionadas.clear();
-                            });
-                          },
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const PortalAppHeader(),
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                BackButton(),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Rematrícula",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 20),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        "Selecione um curso para visualizar as disciplinas disponíveis.",
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
 
-                        if (cursoSelecionado != null)
-                          Expanded(
-                            child: ListaDisciplinasSelecionaveis(
-                              disciplinasDisponiveis: disciplinasDisponiveis,
-                              disciplinasSelecionadas: disciplinasSelecionadas,
-                              onSelecionar: (disciplina, selecionada) {
-                                setState(() {
-                                  if (selecionada) {
-                                    disciplinasSelecionadas.add(disciplina);
-                                  } else {
-                                    disciplinasSelecionadas.remove(disciplina);
-                                  }
-                                });
-                              },
-                            ),
-                          ),
+          // Conteúdo principal com FutureBuilders
+          Expanded(
+            child: FutureBuilder<List<Curso>>(
+              future: cursosFuture,
+              builder: (context, snapshotCursos) {
+                if (snapshotCursos.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshotCursos.hasError) {
+                  return Center(child: Text('Erro ao carregar cursos'));
+                }
+                final cursos = snapshotCursos.data!;
 
-                        if (cursoSelecionado == null)
-                          const Expanded(
-                            child: Center(
-                              child: Text(
-                                'Selecione um curso para ver as disciplinas disponíveis.',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey,
-                                ),
-                                textAlign: TextAlign.center,
+                return FutureBuilder<List<Disciplina>>(
+                  future: disciplinasFuture,
+                  builder: (context, snapshotDisciplinas) {
+                    if (snapshotDisciplinas.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshotDisciplinas.hasError) {
+                      return Center(
+                        child: Text('Erro ao carregar disciplinas'),
+                      );
+                    }
+                    final disciplinas = snapshotDisciplinas.data!;
+
+                    return FutureBuilder<List<Matricula>>(
+                      future: matriculasFuture,
+                      builder: (context, snapshotMatriculas) {
+                        if (snapshotMatriculas.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshotMatriculas.hasError) {
+                          return Center(
+                            child: Text('Erro ao carregar matrículas'),
+                          );
+                        }
+                        final matriculas = snapshotMatriculas.data!;
+
+                        final disciplinasDisponiveis =
+                            cursoSelecionado == null
+                                ? <Disciplina>[]
+                                : _filtrarDisciplinas(
+                                  cursoId: cursoSelecionado!,
+                                  disciplinas: disciplinas,
+                                  matriculas: matriculas,
+                                );
+
+                        return Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              CursoDropdownWidget(
+                                cursos: cursos,
+                                cursoSelecionado: cursoSelecionado,
+                                onChanged: (novo) {
+                                  setState(() {
+                                    cursoSelecionado = novo;
+                                    disciplinasSelecionadas.clear();
+                                  });
+                                },
                               ),
-                            ),
-                          ),
+                              const SizedBox(height: 20),
 
-                        ElevatedButton(
-                          onPressed: () {
-                            if (disciplinasSelecionadas.isNotEmpty) {
-                              _confirmarMatricula();
-                            } else {
-                              if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Selecione ao menos uma disciplina.',
+                              if (cursoSelecionado != null)
+                                Expanded(
+                                  child: ListaDisciplinasSelecionaveis(
+                                    disciplinasDisponiveis:
+                                        disciplinasDisponiveis,
+                                    disciplinasSelecionadas:
+                                        disciplinasSelecionadas,
+                                    onSelecionar: (disciplina, selecionada) {
+                                      setState(() {
+                                        if (selecionada) {
+                                          disciplinasSelecionadas.add(
+                                            disciplina,
+                                          );
+                                        } else {
+                                          disciplinasSelecionadas.remove(
+                                            disciplina,
+                                          );
+                                        }
+                                      });
+                                    },
                                   ),
                                 ),
-                              );
-                            }
-                          },
-                          child: const Text("Confirmar Matrícula"),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          );
-        },
+
+                              if (cursoSelecionado == null)
+                                const Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      'Selecione um curso para ver as disciplinas disponíveis.',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (disciplinasSelecionadas.isNotEmpty) {
+                                    _confirmarMatricula();
+                                  } else {
+                                    if (!mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Selecione ao menos uma disciplina.',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const Text("Confirmar Matrícula"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:painel_do_aluno/models/aluno.dart';
 import 'package:painel_do_aluno/service/data_service.dart';
 import 'package:painel_do_aluno/widgets/aluno_info_widget.dart';
 import 'package:painel_do_aluno/widgets/lista_documentos_widget.dart';
+import 'package:painel_do_aluno/widgets/portal_app_header.dart';
 
 class SituacaoAcademicaPage extends StatelessWidget {
   const SituacaoAcademicaPage({super.key});
@@ -21,7 +22,7 @@ class SituacaoAcademicaPage extends StatelessWidget {
         }
 
         if (snapshot.hasError) {
-          return Scaffold(
+          return const Scaffold(
             body: Center(child: Text('Erro ao carregar dados do aluno.')),
           );
         }
@@ -30,10 +31,19 @@ class SituacaoAcademicaPage extends StatelessWidget {
 
         final documentos = [
           {'nome': 'Carteira de Identidade/RG', 'status': aluno.simIdentidade},
-          {'nome': 'Certidão de Nascimento/Casamento', 'status': aluno.simCertNascimento},
-          {'nome': 'Histórico Escolar - Ensino Médio', 'status': aluno.simHistoricoEscolar},
+          {
+            'nome': 'Certidão de Nascimento/Casamento',
+            'status': aluno.simCertNascimento,
+          },
+          {
+            'nome': 'Histórico Escolar - Ensino Médio',
+            'status': aluno.simHistoricoEscolar,
+          },
           {'nome': 'CPF (CIC)', 'status': true},
-          {'nome': 'Diploma/Certificado Registrado', 'status': aluno.simDiploma},
+          {
+            'nome': 'Diploma/Certificado Registrado',
+            'status': aluno.simDiploma,
+          },
           {'nome': 'Comprovante de Vacina', 'status': aluno.simCompVacina},
         ];
 
@@ -54,22 +64,62 @@ class SituacaoAcademicaPage extends StatelessWidget {
         }
 
         return Scaffold(
-          appBar: AppBar(title: const Text("Situação Acadêmica")),
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AlunoInfoWidget(aluno: aluno),
-                const SizedBox(height: 20),
-                const Text(
-                  'Documentos:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const PortalAppHeader(),
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    BackButton(),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Situação Acadêmica",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            "Consulte abaixo suas informações e documentos pendentes.",
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                ListaDocumentosWidget(documentos: documentos),
-              ],
-            ),
+              ),
+              
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AlunoInfoWidget(aluno: aluno),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Documentos:',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ListaDocumentosWidget(documentos: documentos),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
