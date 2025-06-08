@@ -56,21 +56,46 @@ class _RematriculaPageState extends State<RematriculaPage> {
     }).toList();
   }
 
-  void _confirmarMatricula() {
+ Future<void> _confirmarMatricula() async {
+  try {
+    for (var disciplina in disciplinasSelecionadas) {
+      final matricula = Matricula(
+          id: UniqueKey().toString(),
+          disciplinaId: disciplina.id,
+          faltas: 0,
+          a1: null,
+          a2: null,
+          exameFinal: null,
+          mediaSemestral: null,
+          mediaFinal: null,
+          alunoId: '1',
+          semestreAtual: true,
+          situacao: 'MATRICULADO',
+        );
+
+      await dataService.salvarMatricula(matricula);
+    }
+
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Matrícula confirmada!'),
+        content: Text('Matrícula confirmada com sucesso!'),
         backgroundColor: Colors.green,
       ),
     );
 
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/');
-    });
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.pushReplacementNamed(context, '/');
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Erro ao confirmar matrícula: $e'),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -216,20 +241,12 @@ class _RematriculaPageState extends State<RematriculaPage> {
                                 ),
 
                               ElevatedButton(
-                                onPressed: () {
-                                  if (disciplinasSelecionadas.isNotEmpty) {
-                                    _confirmarMatricula();
-                                  } else {
-                                    if (!mounted) return;
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Selecione ao menos uma disciplina.',
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
+                                onPressed:
+                                    disciplinasSelecionadas.isNotEmpty
+                                        ? () async {
+                                          await _confirmarMatricula();
+                                        }
+                                        : null,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.indigo[900],
                                   foregroundColor: Colors.white,

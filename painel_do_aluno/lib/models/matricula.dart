@@ -40,4 +40,13 @@ class Matricula {
       semestreAtual: json['semestreAtual'] ?? false,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'disciplinaId': disciplinaId,
+      'semestreAtual': semestreAtual,
+      'situacao': situacao,
+    };
+  }
 }
