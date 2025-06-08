@@ -40,7 +40,7 @@ class _BoletimPageState extends State<BoletimPage> {
         children: [
           // Cabeçalho fixo com "Portal do Aluno"
           const PortalAppHeader(),
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,6 +56,7 @@ class _BoletimPageState extends State<BoletimPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
+                          color: Colors.indigo[900],
                         ),
                       ),
                       SizedBox(height: 4),

@@ -53,7 +53,7 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const PortalAppHeader(),
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,6 +69,7 @@ class _GradeCurricularPageState extends State<GradeCurricularPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
+                          color: Colors.indigo[900],
                         ),
                       ),
                       SizedBox(height: 4),

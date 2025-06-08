@@ -68,7 +68,7 @@ class SituacaoAcademicaPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const PortalAppHeader(),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,6 +84,7 @@ class SituacaoAcademicaPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              color: Colors.indigo[900],
                             ),
                           ),
                           SizedBox(height: 4),
@@ -97,7 +98,7 @@ class SituacaoAcademicaPage extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(16),

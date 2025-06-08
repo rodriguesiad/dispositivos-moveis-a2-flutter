@@ -79,7 +79,7 @@ class _RematriculaPageState extends State<RematriculaPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const PortalAppHeader(),
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,6 +95,7 @@ class _RematriculaPageState extends State<RematriculaPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
+                          color: Colors.indigo[900],
                         ),
                       ),
                       SizedBox(height: 4),
@@ -229,7 +230,18 @@ class _RematriculaPageState extends State<RematriculaPage> {
                                     );
                                   }
                                 },
-                                child: const Text("Confirmar Matrícula"),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.indigo[900],
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                    horizontal: 24,
+                                  ),
+                                  textStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                child: const Text("CONFIRMAR MATRÍCULA"),
                               ),
                             ],
                           ),

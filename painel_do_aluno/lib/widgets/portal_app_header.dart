@@ -5,18 +5,24 @@ class PortalAppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.indigo[900],
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      alignment: Alignment.center,
-      child: const Text(
-        'Portal do Aluno',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
           color: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          alignment: Alignment.center,
+          child: Text(
+            'Portal do Aluno',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.indigo[900],
+            ),
+          ),
         ),
-      ),
+        Container(height: 10, color: Colors.amber),
+      ],
     );
   }
 }

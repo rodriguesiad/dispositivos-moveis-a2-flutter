@@ -10,10 +10,15 @@ class DisciplinaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       color: Colors.white,
+      margin: const EdgeInsets.symmetric(
+        vertical: 4,
+      ), 
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start, 
         children: [
           Text(
             disciplina.nome,
