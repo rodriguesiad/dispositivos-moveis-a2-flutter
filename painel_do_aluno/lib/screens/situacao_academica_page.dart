@@ -13,8 +13,7 @@ class SituacaoAcademicaPage extends StatefulWidget {
 }
 
 class _SituacaoAcademicaPageState extends State<SituacaoAcademicaPage> {
-  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
-      GlobalKey<ScaffoldMessengerState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _snackBarController;
 
   @override
