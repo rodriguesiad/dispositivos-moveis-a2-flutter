@@ -71,4 +71,15 @@ class DataService {
       throw Exception('Erro ao cadastrar matrícula: ${response.body}');
     }
   }
+
+  Future<Aluno> carregarAlunoPorEmail(String email) async {
+    final url = Uri.parse('$baseUrl/alunos?email=$email');
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final dados = jsonDecode(response.body);
+      return Aluno.fromJson(dados[0]); 
+    } else {
+      throw Exception('Erro ao carregar aluno');
+    }
+  }
 }

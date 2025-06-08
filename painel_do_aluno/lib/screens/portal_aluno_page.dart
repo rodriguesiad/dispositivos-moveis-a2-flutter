@@ -13,12 +13,13 @@ class PortaldoAlunoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
+      body: ListView(
+        children: const [
           PortalAppHeader(),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(16),
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
               children: [
                 CardPortalItem(
                   titulo: "BOLETIM (SEMESTRE ATUAL)",
@@ -33,8 +34,7 @@ class PortaldoAlunoPage extends StatelessWidget {
                 ),
                 CardPortalItem(
                   titulo: "REMATRÍCULA ONLINE",
-                  subtitulo:
-                      "Fazer a rematrícula conforme calendário acadêmico.",
+                  subtitulo: "Fazer a rematrícula conforme calendário acadêmico.",
                   destino: RematriculaPage(),
                 ),
                 CardPortalItem(

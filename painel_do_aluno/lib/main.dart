@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:painel_do_aluno/screens/login_page.dart';
 import 'package:painel_do_aluno/screens/portal_aluno_page.dart';
-import 'package:painel_do_aluno/screens/rematricula_page.dart'; 
+
 void main() {
-  runApp(PortalAlunoApp());
+  runApp(const PortalAlunoApp());
 }
 
 class PortalAlunoApp extends StatelessWidget {
@@ -11,14 +12,15 @@ class PortalAlunoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Portal do Aluno',
-      theme: ThemeData(primarySwatch: Colors.indigo, scaffoldBackgroundColor: Colors.white),
-      initialRoute: '/', 
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+        primarySwatch: Colors.indigo,
+      ),
+      initialRoute: '/',
       routes: {
-        '/':
-            (context) => const PortaldoAlunoPage(), 
-        '/rematricula':
-            (context) => const RematriculaPage(),
+        '/': (context) => const LoginPage(),
+        '/home': (context) => const PortaldoAlunoPage(),
       },
     );
   }
