@@ -71,44 +71,48 @@ class _SituacaoAcademicaPageState extends State<SituacaoAcademicaPage> {
     final aluno = widget.aluno;
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const PortalAppHeader(),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const BackButton(),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Situação Acadêmica",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.indigo[900],
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const PortalAppHeader(),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  const BackButton(),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Situação Acadêmica",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo[900],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        "Consulte abaixo suas informações e documentos pendentes.",
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        const Text(
+                          "Consulte abaixo suas informações e documentos pendentes.",
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+            const SizedBox(height: 8),
+            Expanded(
               child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -128,8 +132,9 @@ class _SituacaoAcademicaPageState extends State<SituacaoAcademicaPage> {
                 ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }
