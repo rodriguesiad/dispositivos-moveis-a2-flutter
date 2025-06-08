@@ -34,8 +34,10 @@ class DataService {
     }
   }
 
-  Future<List<Matricula>> carregarMatriculas() async {
-    final response = await http.get(Uri.parse('$baseUrl/matriculas'));
+  Future<List<Matricula>> carregarMatriculasDoAluno(String alunoId) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/matriculas?alunoId=$alunoId'),
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> matriculasJson = json.decode(
@@ -43,18 +45,7 @@ class DataService {
       );
       return matriculasJson.map((json) => Matricula.fromJson(json)).toList();
     } else {
-      throw Exception('Erro ao carregar matriculas');
-    }
-  }
-
-  Future<Aluno> carregarAluno() async {
-    final response = await http.get(Uri.parse('$baseUrl/alunos/1'));
-
-    if (response.statusCode == 200) {
-      final alunoJson = json.decode(utf8.decode(response.bodyBytes));
-      return Aluno.fromJson(alunoJson);
-    } else {
-      throw Exception('Erro ao carregar aluno');
+      throw Exception('Erro ao carregar matrículas do aluno');
     }
   }
 
@@ -72,14 +63,18 @@ class DataService {
     }
   }
 
-  Future<Aluno> carregarAlunoPorEmail(String email) async {
-    final url = Uri.parse('$baseUrl/alunos?email=$email');
+  Future<Aluno?> autenticarAluno(String email, String senha) async {
+    final url = Uri.parse('$baseUrl/alunos?email=$email&senha=$senha');
     final response = await http.get(url);
+
     if (response.statusCode == 200) {
-      final dados = jsonDecode(response.body);
-      return Aluno.fromJson(dados[0]); 
+      final List dados = jsonDecode(utf8.decode(response.bodyBytes));
+      if (dados.isNotEmpty) {
+        return Aluno.fromJson(dados[0]);
+      }
+      return null;
     } else {
-      throw Exception('Erro ao carregar aluno');
+      throw Exception('Erro ao autenticar aluno');
     }
   }
 }

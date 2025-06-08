@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:painel_do_aluno/screens/login_page.dart';
 import 'package:painel_do_aluno/screens/portal_aluno_page.dart';
+import 'package:painel_do_aluno/screens/rematricula_page.dart';
+import 'package:painel_do_aluno/models/aluno.dart';
 
 void main() {
   runApp(const PortalAlunoApp());

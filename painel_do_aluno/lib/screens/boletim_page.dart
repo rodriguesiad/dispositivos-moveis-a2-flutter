@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:painel_do_aluno/models/aluno.dart';
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
 import 'package:painel_do_aluno/models/matricula.dart';
@@ -10,7 +11,8 @@ import 'package:painel_do_aluno/widgets/curso_dropdown_widget.dart';
 import 'package:painel_do_aluno/widgets/portal_app_header.dart';
 
 class BoletimPage extends StatefulWidget {
-  const BoletimPage({super.key});
+    final Aluno aluno;
+  const BoletimPage({super.key, required this.aluno});
 
   @override
   State<BoletimPage> createState() => _BoletimPageState();
@@ -25,11 +27,11 @@ class _BoletimPageState extends State<BoletimPage> {
   final DataService dataService = DataService();
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     cursosFuture = dataService.carregarCursos();
     disciplinasFuture = dataService.carregarDisciplinas();
-    matriculasFuture = dataService.carregarMatriculas();
+    matriculasFuture = dataService.carregarMatriculasDoAluno(widget.aluno.id);
   }
 
   @override
@@ -38,15 +40,14 @@ class _BoletimPageState extends State<BoletimPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Cabeçalho fixo com "Portal do Aluno"
           const PortalAppHeader(),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                BackButton(),
-                SizedBox(width: 8),
+                const BackButton(),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,8 +60,8 @@ class _BoletimPageState extends State<BoletimPage> {
                           color: Colors.indigo[900],
                         ),
                       ),
-                      SizedBox(height: 4),
-                      Text(
+                      const SizedBox(height: 4),
+                      const Text(
                         "Selecione um curso para visualizar as notas do semestre atual.",
                         style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
@@ -70,7 +71,6 @@ class _BoletimPageState extends State<BoletimPage> {
               ],
             ),
           ),
-
           Expanded(
             child: FutureBuilder<List<Curso>>(
               future: cursosFuture,
@@ -85,7 +85,7 @@ class _BoletimPageState extends State<BoletimPage> {
                     ),
                   );
                 }
-                final cursos = snapshotCursos.data;
+                final cursos = snapshotCursos.data!;
 
                 return FutureBuilder<List<Disciplina>>(
                   future: disciplinasFuture,
@@ -101,7 +101,7 @@ class _BoletimPageState extends State<BoletimPage> {
                         ),
                       );
                     }
-                    final disciplinas = snapshotDisciplinas.data;
+                    final disciplinas = snapshotDisciplinas.data!;
 
                     return FutureBuilder<List<Matricula>>(
                       future: matriculasFuture,
@@ -119,15 +119,15 @@ class _BoletimPageState extends State<BoletimPage> {
                             ),
                           );
                         }
-                        final matriculas = snapshotMatriculas.data;
+                        final matriculas = snapshotMatriculas.data!;
 
                         final disciplinasFiltradas =
                             cursoSelecionado == null
                                 ? []
                                 : filtrarDisciplinasDoCursoAtivo(
                                   cursoSelecionado!,
-                                  disciplinas!,
-                                  matriculas!,
+                                  disciplinas,
+                                  matriculas,
                                 );
 
                         return Column(
@@ -135,7 +135,7 @@ class _BoletimPageState extends State<BoletimPage> {
                             Padding(
                               padding: const EdgeInsets.all(16),
                               child: CursoDropdownWidget(
-                                cursos: cursos!,
+                                cursos: cursos,
                                 cursoSelecionado: cursoSelecionado,
                                 onChanged: (novo) {
                                   setState(() {
@@ -144,13 +144,12 @@ class _BoletimPageState extends State<BoletimPage> {
                                 },
                               ),
                             ),
-
                             if (cursoSelecionado != null)
                               Expanded(
                                 child: ListView(
                                   children:
                                       disciplinasFiltradas.map((disciplina) {
-                                        final matricula = matriculas!
+                                        final matricula = matriculas
                                             .firstWhereOrNull(
                                               (m) =>
                                                   m.disciplinaId ==

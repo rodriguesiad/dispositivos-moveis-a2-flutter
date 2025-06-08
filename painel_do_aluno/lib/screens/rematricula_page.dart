@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:painel_do_aluno/models/aluno.dart';
 import 'package:painel_do_aluno/models/curso.dart';
 import 'package:painel_do_aluno/models/disciplina.dart';
 import 'package:painel_do_aluno/models/matricula.dart';
@@ -8,7 +9,8 @@ import 'package:painel_do_aluno/widgets/lista_disciplinas_selecionaveis.dart';
 import 'package:painel_do_aluno/widgets/portal_app_header.dart';
 
 class RematriculaPage extends StatefulWidget {
-  const RematriculaPage({super.key});
+  final Aluno aluno;
+  const RematriculaPage({super.key, required this.aluno});
 
   @override
   State<RematriculaPage> createState() => _RematriculaPageState();
@@ -29,7 +31,7 @@ class _RematriculaPageState extends State<RematriculaPage> {
     super.initState();
     cursosFuture = dataService.carregarCursos();
     disciplinasFuture = dataService.carregarDisciplinas();
-    matriculasFuture = dataService.carregarMatriculas();
+    matriculasFuture = dataService.carregarMatriculasDoAluno(widget.aluno.id);
   }
 
   List<Disciplina> _filtrarDisciplinas({
@@ -56,10 +58,10 @@ class _RematriculaPageState extends State<RematriculaPage> {
     }).toList();
   }
 
- Future<void> _confirmarMatricula() async {
-  try {
-    for (var disciplina in disciplinasSelecionadas) {
-      final matricula = Matricula(
+  Future<void> _confirmarMatricula() async {
+    try {
+      for (var disciplina in disciplinasSelecionadas) {
+        final matricula = Matricula(
           id: UniqueKey().toString(),
           disciplinaId: disciplina.id,
           faltas: 0,
@@ -68,34 +70,34 @@ class _RematriculaPageState extends State<RematriculaPage> {
           exameFinal: null,
           mediaSemestral: null,
           mediaFinal: null,
-          alunoId: '1',
+          alunoId: widget.aluno.id,
           semestreAtual: true,
           situacao: 'MATRICULADO',
         );
 
-      await dataService.salvarMatricula(matricula);
+        await dataService.salvarMatricula(matricula);
+      }
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Matrícula confirmada com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.pushNamed(context, '/home', arguments: widget.aluno);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao confirmar matrícula: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
-
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Matrícula confirmada com sucesso!'),
-        backgroundColor: Colors.green,
-      ),
-    );
-
-    await Future.delayed(const Duration(seconds: 2));
-    Navigator.pushReplacementNamed(context, '/');
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Erro ao confirmar matrícula: $e'),
-        backgroundColor: Colors.red,
-      ),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -105,12 +107,12 @@ class _RematriculaPageState extends State<RematriculaPage> {
         children: [
           const PortalAppHeader(),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                BackButton(),
-                SizedBox(width: 8),
+                const BackButton(),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,8 +125,8 @@ class _RematriculaPageState extends State<RematriculaPage> {
                           color: Colors.indigo[900],
                         ),
                       ),
-                      SizedBox(height: 4),
-                      Text(
+                      const SizedBox(height: 4),
+                      const Text(
                         "Selecione um curso para visualizar as disciplinas disponíveis.",
                         style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
@@ -134,8 +136,6 @@ class _RematriculaPageState extends State<RematriculaPage> {
               ],
             ),
           ),
-
-          // Conteúdo principal com FutureBuilders
           Expanded(
             child: FutureBuilder<List<Curso>>(
               future: cursosFuture,
@@ -144,7 +144,7 @@ class _RematriculaPageState extends State<RematriculaPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshotCursos.hasError) {
-                  return Center(child: Text('Erro ao carregar cursos'));
+                  return const Center(child: Text('Erro ao carregar cursos'));
                 }
                 final cursos = snapshotCursos.data!;
 
@@ -156,7 +156,7 @@ class _RematriculaPageState extends State<RematriculaPage> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (snapshotDisciplinas.hasError) {
-                      return Center(
+                      return const Center(
                         child: Text('Erro ao carregar disciplinas'),
                       );
                     }
@@ -172,7 +172,7 @@ class _RematriculaPageState extends State<RematriculaPage> {
                           );
                         }
                         if (snapshotMatriculas.hasError) {
-                          return Center(
+                          return const Center(
                             child: Text('Erro ao carregar matrículas'),
                           );
                         }
@@ -202,7 +202,6 @@ class _RematriculaPageState extends State<RematriculaPage> {
                                 },
                               ),
                               const SizedBox(height: 20),
-
                               if (cursoSelecionado != null)
                                 Expanded(
                                   child: ListaDisciplinasSelecionaveis(
@@ -225,7 +224,6 @@ class _RematriculaPageState extends State<RematriculaPage> {
                                     },
                                   ),
                                 ),
-
                               if (cursoSelecionado == null)
                                 const Expanded(
                                   child: Center(
@@ -239,7 +237,6 @@ class _RematriculaPageState extends State<RematriculaPage> {
                                     ),
                                   ),
                                 ),
-
                               ElevatedButton(
                                 onPressed:
                                     disciplinasSelecionadas.isNotEmpty

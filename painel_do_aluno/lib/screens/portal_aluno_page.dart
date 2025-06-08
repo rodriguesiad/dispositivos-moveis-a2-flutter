@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:painel_do_aluno/models/aluno.dart';
 import 'package:painel_do_aluno/screens/boletim_page.dart';
 import 'package:painel_do_aluno/screens/grade_curricular_page.dart';
 import 'package:painel_do_aluno/screens/rematricula_page.dart';
@@ -12,10 +13,32 @@ class PortaldoAlunoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final aluno = ModalRoute.of(context)!.settings.arguments as Aluno;
+
     return Scaffold(
       body: ListView(
-        children: const [
+        children: [
           PortalAppHeader(),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Olá, ${aluno.nome}",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           SizedBox(height: 16),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
@@ -24,7 +47,7 @@ class PortaldoAlunoPage extends StatelessWidget {
                 CardPortalItem(
                   titulo: "BOLETIM (SEMESTRE ATUAL)",
                   subtitulo: "Desempenho nas disciplinas do semestre atual",
-                  destino: BoletimPage(),
+                  destino: BoletimPage(aluno: aluno),
                 ),
                 CardPortalItem(
                   titulo: "GRADE CURRICULAR",
@@ -34,18 +57,19 @@ class PortaldoAlunoPage extends StatelessWidget {
                 ),
                 CardPortalItem(
                   titulo: "REMATRÍCULA ONLINE",
-                  subtitulo: "Fazer a rematrícula conforme calendário acadêmico.",
-                  destino: RematriculaPage(),
+                  subtitulo:
+                      "Fazer a rematrícula conforme calendário acadêmico.",
+                  destino: RematriculaPage(aluno: aluno)
                 ),
                 CardPortalItem(
                   titulo: "SITUAÇÃO ACADÊMICA",
                   subtitulo: "Veja sua situação junto à secretaria.",
-                  destino: SituacaoAcademicaPage(),
+                  destino: SituacaoAcademicaPage(aluno: aluno),
                 ),
                 CardPortalItem(
                   titulo: "ANÁLISE CURRICULAR",
                   subtitulo: "Análise curricular completa",
-                  destino: AnaliseCurricularPage(),
+                  destino: AnaliseCurricularPage(aluno: aluno),
                 ),
               ],
             ),

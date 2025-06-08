@@ -662,6 +662,30 @@
       "disciplinaId": "028002003",
       "semestreAtual": true,
       "situacao": "MATRICULADO"
+    },
+    {
+      "id": "[#3e012]",
+      "disciplinaId": "011001144",
+      "semestreAtual": true,
+      "situacao": "MATRICULADO"
+    },
+    {
+      "id": "[#22ec5]",
+      "disciplinaId": "011001145",
+      "semestreAtual": true,
+      "situacao": "MATRICULADO"
+    },
+    {
+      "id": "[#78d2d]",
+      "disciplinaId": "028002001",
+      "semestreAtual": true,
+      "situacao": "MATRICULADO"
+    },
+    {
+      "id": "[#dbf6c]",
+      "disciplinaId": "011001147",
+      "semestreAtual": true,
+      "situacao": "MATRICULADO"
     }
   ],
   "alunos": [
